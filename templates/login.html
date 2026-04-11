@@ -105,7 +105,7 @@
     }).catch((error) => {
         console.error("Redirect result error:", error);
         if (error.code === 'auth/internal-error') {
-            showError("Firebase config error. Ensure your Render domain is added to Firebase → Authentication → Authorized Domains.");
+            showError("Google Sign-In failed. Please add 'alfredakwetey.me' to Firebase Authorized Domains (Firebase Console → Authentication → Settings → Authorized Domains).");
         } else if (error.code && error.code !== 'auth/no-auth-event') {
             showError(error.message);
         }

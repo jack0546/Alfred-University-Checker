@@ -91,17 +91,32 @@
     async function googleSignIn() {
         const provider = new firebase.auth.GoogleAuthProvider();
         try {
-            const result = await firebase.auth().signInWithPopup(provider);
-            await syncWithBackend(result.user);
+            // Use redirect instead of popup for better compatibility
+            await firebase.auth().signInWithRedirect(provider);
         } catch (error) {
             console.error("Firebase Auth Error:", error);
-            if (error.code === 'auth/internal-error') {
-                showError("Firebase Internal Error. Please check if your domain 'onrender.com' is added to the Authorized Domains in Firebase Console.");
+            if (error.code === 'auth/popup-closed-by-user') {
+                showError("Sign-in was cancelled. Please try again.");
+            } else if (error.code === 'auth/internal-error') {
+                showError("Authentication failed. Please ensure your domain is added to Firebase Authorized Domains.");
             } else {
                 showError(error.message);
             }
+            setLoading(false);
         }
     }
+
+    // Handle redirect result
+    firebase.auth().getRedirectResult().then(async (result) => {
+        if (result && result.user) {
+            await syncWithBackend(result.user);
+        }
+    }).catch((error) => {
+        console.error("Redirect error:", error);
+        if (error.code === 'auth/internal-error') {
+            showError("Authentication failed. Please ensure your domain is added to Firebase Authorized Domains.");
+        }
+    });
 
     async function syncWithBackend(firebaseUser) {
         try {

@@ -1,0 +1,573 @@
+{
+  "universities": [
+    {
+      "name": "University of Ghana",
+      "abbreviation": "UG",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ug.edu.gh",
+      "description": "Premier research university offering diverse programs in sciences, arts, social sciences, engineering, medicine and law",
+      "programs": [
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "description": "Study of computation, information, and automation. This program covers software engineering, artificial intelligence, and data structures.", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Medicine", "category": "Science", "description": "Comprehensive medical training for future physicians, covering anatomy, physiology, and clinical practice.", "maximum_aggregate": 18, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Engineering", "category": "Science", "description": "Core engineering principles applied to real-world problems. Includes civil, electrical, and mechanical tracks.", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Arts in Economics", "category": "Arts", "description": "Analysis of production, distribution, and consumption of goods and services. Focuses on both micro and macro economics.", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"], "popularity_level": "medium", "value_level": "medium", "is_desired_program": false},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "description": "Professional healthcare training focused on care of individuals, families, and communities.", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Laws", "category": "Arts", "description": "Professional degree for legal practitioners, covering constitutional law, criminal law, and legal theory.", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Pharmacy", "category": "Science", "description": "Study of drugs and their effects, preparing students for professional practice in clinical and community pharmacy.", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true}
+      ]
+    },
+    {
+      "name": "Kwame Nkrumah University of Science and Technology",
+      "abbreviation": "KNUST",
+      "type": "Traditional",
+      "city": "Kumasi",
+      "website": "www.knust.edu.gh",
+      "description": "Leading science and technology university with strong engineering, architecture and medicine programs",
+      "programs": [
+        {"name": "Bachelor of Science in Engineering", "category": "Science", "description": "Intensive engineering training with access to lead-edge laboratories and technical facilities.", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Pharmacy", "category": "Science", "description": "One of Ghana's top pharmacy programs, focused on pharmaceutical sciences and clinical practice.", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Medicine", "category": "Science", "description": "Prestigious medical degree with a strong emphasis on clinical experience at Komfo Anokye Teaching Hospital.", "maximum_aggregate": 18, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Architecture", "category": "Science", "description": "Combining art and science to design the built environment. Accredited by the Ghana Institute of Architects.", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "medium", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "description": "Leading tech program focusing on software dev, cybersecurity, and networking.", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Agriculture", "category": "Science", "description": "Modern agricultural science focusing on crop production, animal science, and soil health.", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "low", "value_level": "medium", "is_desired_program": false}
+      ]
+    },
+    {
+      "name": "University of Cape Coast",
+      "abbreviation": "UCC",
+      "type": "Traditional",
+      "city": "Cape Coast",
+      "website": "www.ucc.edu.gh",
+      "description": "Coastal university with strong education, social sciences and business programs",
+      "programs": [
+        {"name": "Bachelor of Science in Education", "category": "Education", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"], "popularity_level": "medium", "value_level": "medium", "is_desired_program": false},
+        {"name": "Bachelor of Science in Hospitality Management", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"], "popularity_level": "low", "value_level": "low", "is_desired_program": false},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "high", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"], "popularity_level": "medium", "value_level": "high", "is_desired_program": true},
+        {"name": "Bachelor of Laws", "category": "Arts", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"], "popularity_level": "high", "value_level": "high", "is_desired_program": true}
+      ]
+    },
+    {
+      "name": "University of Education Winneba",
+      "abbreviation": "UEW",
+      "type": "Traditional",
+      "city": "Winneba",
+      "website": "www.uew.edu.gh",
+      "description": "Specialized teacher training university offering diverse education programs",
+      "programs": [
+        {"name": "Bachelor of Education (Sciences)", "category": "Education", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Education (Social Sciences)", "category": "Education", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Education (Language Arts)", "category": "Education", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "University for Development Studies",
+      "abbreviation": "UDS",
+      "type": "Traditional",
+      "city": "Tamale",
+      "website": "www.uds.edu.gh",
+      "description": "Northern region's premier university with focus on development-oriented education",
+      "programs": [
+        {"name": "Bachelor of Science in Agriculture", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "University of Mines and Technology",
+      "abbreviation": "UMaT",
+      "type": "Traditional",
+      "city": "Tarkwa",
+      "website": "www.umat.edu.gh",
+      "description": "Specialized mining, metallurgy and natural resources university",
+      "programs": [
+        {"name": "Bachelor of Science in Mining Engineering", "category": "Science", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Metallurgical Engineering", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Environmental Engineering", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "University of Energy and Natural Resources",
+      "abbreviation": "UENR",
+      "type": "Traditional",
+      "city": "Sunyani",
+      "website": "www.uenr.edu.gh",
+      "description": "Specialized energy, environment and natural resources university",
+      "programs": [
+        {"name": "Bachelor of Science in Renewable Energy Engineering", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Environmental Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Petroleum Engineering", "category": "Science", "maximum_aggregate": 20, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Forestry", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "Accra Technical University",
+      "abbreviation": "ATU",
+      "type": "Technical",
+      "city": "Accra",
+      "website": "www.atu.edu.gh",
+      "description": "Leading technical university in Ghana offering diploma and degree programs",
+      "programs": [
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Technology in Engineering", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "Koforidua Technical University",
+      "abbreviation": "KTU",
+      "type": "Technical",
+      "city": "Koforidua",
+      "website": "www.ktu.edu.gh",
+      "description": "Eastern region technical institution offering diverse programs",
+      "programs": [
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Hospitality Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Kumasi Technical University",
+      "abbreviation": "KSU",
+      "type": "Technical",
+      "city": "Kumasi",
+      "website": "www.kstu.edu.gh",
+      "description": "Ashanti region technical hub offering engineering and business programs",
+      "programs": [
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Information Technology", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Takoradi Technical University",
+      "abbreviation": "TaTU",
+      "type": "Technical",
+      "city": "Takoradi",
+      "website": "www.tatu.edu.gh",
+      "description": "Western region maritime and technical institution",
+      "programs": [
+        {"name": "HND in Maritime Studies", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Ho Technical University",
+      "abbreviation": "HoTU",
+      "type": "Technical",
+      "city": "Ho",
+      "website": "www.hotu.edu.gh",
+      "description": "Volta region technical university with construction and engineering focus",
+      "programs": [
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Construction Management", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Sunyani Technical University",
+      "abbreviation": "STU",
+      "type": "Technical",
+      "city": "Sunyani",
+      "website": "www.stu.edu.gh",
+      "description": "Central region technical university offering vocational and business programs",
+      "programs": [
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Agriculture", "category": "Science", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "HND in Information Technology", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Tamale Technical University",
+      "abbreviation": "TaTTU",
+      "type": "Technical",
+      "city": "Tamale",
+      "website": "www.tatu.edu.gh",
+      "description": "Northern region technical university with diverse programs",
+      "programs": [
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Hospitality Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Cape Coast Technical University",
+      "abbreviation": "CCTU",
+      "type": "Technical",
+      "city": "Cape Coast",
+      "website": "www.cctu.edu.gh",
+      "description": "Central region technical university with maritime and hospitality focus",
+      "programs": [
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Hospitality Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Bolgatanga Technical University",
+      "abbreviation": "BoTU",
+      "type": "Technical",
+      "city": "Bolgatanga",
+      "website": "www.botu.edu.gh",
+      "description": "Upper East region technical university with agricultural focus",
+      "programs": [
+        {"name": "HND in Agriculture", "category": "Science", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Mechanical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Wa Technical University",
+      "abbreviation": "WaTU",
+      "type": "Technical",
+      "city": "Wa",
+      "website": "www.watu.edu.gh",
+      "description": "Upper West region technical university",
+      "programs": [
+        {"name": "HND in Business Administration", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Civil Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Agriculture", "category": "Science", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "Ashesi University",
+      "abbreviation": "AU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ashesi.edu.gh",
+      "description": "Private university focused on leadership and business education",
+      "programs": [
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Arts in Liberal Studies", "category": "Arts", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Regent University College",
+      "abbreviation": "RUC",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ruc.edu.gh",
+      "description": "Private university with business and social sciences programs",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Accounting", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Laws", "category": "Arts", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Central University",
+      "abbreviation": "CU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.central.edu.gh",
+      "description": "Private university offering diverse academic programs",
+      "programs": [
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Engineering", "category": "Science", "maximum_aggregate": 22, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Zenith University",
+      "abbreviation": "ZU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.zenith.edu.gh",
+      "description": "Private university with focus on technology and business",
+      "programs": [
+        {"name": "Bachelor of Science in Information Technology", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Computer Engineering", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "Valley View University",
+      "abbreviation": "VVU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.vvu.edu.gh",
+      "description": "Private Christian university offering business and computing programs",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Laws", "category": "Arts", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Christian Service University College",
+      "abbreviation": "CSUC",
+      "type": "Traditional",
+      "city": "Kumasi",
+      "website": "www.csuc.edu.gh",
+      "description": "Private university college with diverse programs",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Arts in Education", "category": "Education", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Ghana Technology University College",
+      "abbreviation": "GTUC",
+      "type": "Technical",
+      "city": "Accra",
+      "website": "www.gtuc.edu.gh",
+      "description": "Technical university college with focus on technology",
+      "programs": [
+        {"name": "HND in Information Technology", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Technology in Software Engineering", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Fidelity University College",
+      "abbreviation": "FUC",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.fidelity.edu.gh",
+      "description": "Private university with business and computing focus",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Accounting", "category": "Business", "maximum_aggregate": 27, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Accra Institute of Technology",
+      "abbreviation": "AIT",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ait.edu.gh",
+      "description": "Private institute focusing on technology and engineering",
+      "programs": [
+        {"name": "Bachelor of Science in Software Engineering", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Science in Information Technology", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Science in Computer Networks", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Metropolitan University",
+      "abbreviation": "MU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.metropolitan.edu.gh",
+      "description": "Private university with business and social science programs",
+      "programs": [
+        {"name": "Bachelor of Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Finance", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Arts in Human Resource Management", "category": "Arts", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Institute of Professional Studies",
+      "abbreviation": "IPS",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ips.edu.gh",
+      "description": "Professional institute offering specialized programs",
+      "programs": [
+        {"name": "Bachelor of Science in Procurement", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Management", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Public Administration", "category": "Arts", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Thomas Sankara University",
+      "abbreviation": "TSU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.tsu.edu.gh",
+      "description": "Private institution with focus on development studies",
+      "programs": [
+        {"name": "Bachelor of Arts in Development Studies", "category": "Arts", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Project Management", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Arts in International Relations", "category": "Arts", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "pan-African University of Management and Entrepreneurship",
+      "abbreviation": "PAUM",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.paum.edu.gh",
+      "description": "University focused on management and entrepreneurship",
+      "programs": [
+        {"name": "Bachelor of Science in Entrepreneurship", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Strategic Management", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Global University Ghana",
+      "abbreviation": "GUG",
+      "type": "Traditional",
+      "city": "Kumasi",
+      "website": "www.global.edu.gh",
+      "description": "Private university with international curriculum",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Arts in English Language", "category": "Arts", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Ama Aternam Institute of Technology",
+      "abbreviation": "AAIT",
+      "type": "Technical",
+      "city": "Accra",
+      "website": "www.aait.edu.gh",
+      "description": "Technical college with vocational programs",
+      "programs": [
+        {"name": "HND in Information Technology", "category": "Technical", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "HND in Electrical Engineering", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Hospitality Management", "category": "Business", "maximum_aggregate": 34, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "GraceField University",
+      "abbreviation": "GU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.gracefield.edu.gh",
+      "description": "Private Christian university",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Nursing", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]},
+        {"name": "Bachelor of Arts in Biblical Studies", "category": "Arts", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Akenten Appiah-Menka University",
+      "abbreviation": "AAMU",
+      "type": "Traditional",
+      "city": "Kumasi",
+      "website": "www.aamu.edu.gh",
+      "description": "Private university focusing on entrepreneurship and vocational skills",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "HND in Hospitality and Catering", "category": "Business", "maximum_aggregate": 34, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Arts in Fine Arts", "category": "Arts", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Amalitech",
+      "abbreviation": "AT",
+      "type": "Technical",
+      "city": "Accra",
+      "website": "www.amalitech.com.gh",
+      "description": "Tech training institute with hands-on programs",
+      "programs": [
+        {"name": "Diploma in Full Stack Web Development", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Diploma in Mobile App Development", "category": "Technical", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Certificate in UI/UX Design", "category": "Technical", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "Cape Institute of Management Studies",
+      "abbreviation": "CIMS",
+      "type": "Traditional",
+      "city": "Cape Coast",
+      "website": "www.cims.edu.gh",
+      "description": "Management institute with business focus",
+      "programs": [
+        {"name": "Bachelor of Science in Business Management", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Marketing", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Financial Management", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Institute of Business and Technology",
+      "abbreviation": "IBT",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.ibt.edu.gh",
+      "description": "Institute combining business and IT programs",
+      "programs": [
+        {"name": "Bachelor of Science in Information Systems", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in E-Commerce", "category": "Science", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]}
+      ]
+    },
+    {
+      "name": "West Africa Centre for Construction Law and Legal Practice",
+      "abbreviation": "WACCLLP",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.wastcol.edu.gh",
+      "description": "Specialized legal and construction institute",
+      "programs": [
+        {"name": "Bachelor of Laws in Construction Law", "category": "Arts", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Diploma in Legal Practice", "category": "Arts", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Construction Management", "category": "Science", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Integrated Science"]}
+      ]
+    },
+    {
+      "name": "Widows and Orphans Development Institute",
+      "abbreviation": "WODI",
+      "type": "Technical",
+      "city": "Accra",
+      "website": "www.wodi.edu.gh",
+      "description": "Institute with vocational and skills training",
+      "programs": [
+        {"name": "Diploma in Catering and Hospitality", "category": "Business", "maximum_aggregate": 34, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Diploma in Dressmaking and Fashion", "category": "Technical", "maximum_aggregate": 34, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Diploma in Plumbing", "category": "Technical", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "National Institute of Business Studies",
+      "abbreviation": "NIBS",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.nibs.edu.gh",
+      "description": "National institute for business education",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Accountancy", "category": "Business", "maximum_aggregate": 27, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Office Management", "category": "Business", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Atlantic International University",
+      "abbreviation": "AIU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.atlantic.edu.gh",
+      "description": "International university with global curriculum",
+      "programs": [
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 24, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Arts in Psychology", "category": "Arts", "maximum_aggregate": 30, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    },
+    {
+      "name": "Turaco University",
+      "abbreviation": "TU",
+      "type": "Traditional",
+      "city": "Accra",
+      "website": "www.turaco.edu.gh",
+      "description": "Private university with diverse academic programs",
+      "programs": [
+        {"name": "Bachelor of Science in Business Administration", "category": "Business", "maximum_aggregate": 28, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]},
+        {"name": "Bachelor of Science in Computer Science", "category": "Science", "maximum_aggregate": 26, "required_core_subjects": ["English Language", "Core Mathematics", "Information and Communication Technology"]},
+        {"name": "Bachelor of Arts in Hospitality Management", "category": "Business", "maximum_aggregate": 32, "required_core_subjects": ["English Language", "Core Mathematics", "Social Studies"]}
+      ]
+    }
+  ]
+}

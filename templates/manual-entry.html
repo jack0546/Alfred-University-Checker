@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}Manual Entry - Ghana University Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8 offset-lg-2">
+        <h1 class="mb-4"><i class="fas fa-keyboard"></i> Manual Grade Entry</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <form id="manualEntryForm">
+                    <!-- Personal Information -->
+                    <h5 class="mb-3"><i class="fas fa-user"></i> Personal Information</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="fullName" class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="fullName" name="name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="email" class="form-label">Email (Optional)</label>
+                            <input type="email" class="form-control" id="email" name="email">
+                        </div>
+                    </div>
+
+                    <!-- Course Category -->
+                    <h5 class="mb-3"><i class="fas fa-book"></i> Course Category</h5>
+                    <div class="mb-4">
+                        <label for="category" class="form-label">Select Your Course Category *</label>
+                        <select class="form-select" id="category" name="category" required onchange="updateCoreSubjects()">
+                            <option value="">-- Select Category --</option>
+                            <option value="Science">Science</option>
+                            <option value="General Arts">General Arts</option>
+                            <option value="Business">Business</option>
+                            <option value="Visual Arts">Visual Arts</option>
+                            <option value="Home Economics">Home Economics</option>
+                            <option value="Technical/Vocational">Technical/Vocational</option>
+                        </select>
+                    </div>
+
+                    <!-- Core Subjects -->
+                    <h5 class="mb-3"><i class="fas fa-star"></i> Core Subjects (Required) *</h5>
+                    <div id="coreSubjectsContainer" class="mb-4">
+                        <!-- Dynamically populated based on category -->
+                    </div>
+
+                    <!-- Elective Subjects -->
+                    <h5 class="mb-3"><i class="fas fa-plus-circle"></i> Elective Subjects (Choose 3)</h5>
+                    <div class="mb-4">
+                        <small class="form-text text-muted d-block mb-3">
+                            <i class="fas fa-info-circle"></i> Select exactly 3 elective subjects
+                        </small>
+                        <div id="electivesContainer" class="row">
+                            <!-- Electives will be dynamically added -->
+                        </div>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-check"></i> Verify & Continue
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-redo"></i> Clear Form
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Form Validation Messages -->
+                <div id="formError" class="alert alert-danger d-none mt-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Grading Guide Modal -->
+<div class="modal fade" id="gradingGuideModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">WASSCE Grading Guide</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h6 class="mb-2"><i class="fas fa-check-circle text-success"></i> Passing Grades</h6>
+                <p>A1, B2, B3, C4, C5, C6</p>
+                <h6 class="mb-2"><i class="fas fa-times-circle text-danger"></i> Failing Grades (Not counted)</h6>
+                <p>D7, E8, F9</p>
+                <div class="alert alert-info">
+                    <small><strong>Note:</strong> Use only the valid WASSCE grade codes shown above.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const coreSubjectsByCategory = {
+    'Science': ['English Language', 'Core Mathematics', 'Integrated Science'],
+    'General Arts': ['English Language', 'Core Mathematics', 'Social Studies'],
+    'Business': ['English Language', 'Core Mathematics', 'Social Studies'],
+    'Visual Arts': ['English Language', 'Core Mathematics', 'Social Studies'],
+    'Home Economics': ['English Language', 'Core Mathematics', 'Social Studies'],
+    'Technical/Vocational': ['English Language', 'Core Mathematics', 'Social Studies']
+};
+
+const electiveOptions = [
+    'Additional Mathematics', 'Physics', 'Chemistry', 'Biology',
+    'Economics', 'Accounting', 'Business Management', 'Civic Education',
+    'History', 'Geography', 'Literature in English', 'French',
+    'Clothing and Textiles', 'Food and Nutrition', 'Visual Arts',
+    'Music', 'Information and Communication Technology', 'General Knowledge in ICT'
+];
+
+const validGrades = ['A1', 'B2', 'B3', 'C4', 'C5', 'C6', 'D7', 'E8', 'F9'];
+
+function updateCoreSubjects() {
+    const category = document.getElementById('category').value;
+    const container = document.getElementById('coreSubjectsContainer');
+    
+    if (!category) {
+        container.innerHTML = '<small class="text-muted">Select a category first</small>';
+        return;
+    }
+    
+    const subjects = coreSubjectsByCategory[category];
+    let html = '';
+    
+    subjects.forEach((subject, index) => {
+        html += `
+            <div class="row mb-3">
+                <div class="col-md-8">
+                    <label class="form-label">${subject} *</label>
+                </div>
+                <div class="col-md-4">
+                    <select class="form-select" name="core_subjects" data-subject="${subject}" required>
+                        <option value="">Select Grade</option>
+                        ${validGrades.map(g => `<option value="${g}">${g}</option>`).join('')}
+                    </select>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    updateElectives();
+}
+
+function updateElectives() {
+    const container = document.getElementById('electivesContainer');
+    let html = '';
+    
+    electiveOptions.forEach((elective, index) => {
+        html += `
+            <div class="col-md-6 mb-3">
+                <div class="form-check">
+                    <input class="form-check-input elective-checkbox" type="checkbox" value="${elective}" 
+                           id="elective_${index}" name="electives" data-subject="${elective}">
+                    <label class="form-check-label" for="elective_${index}">
+                        ${elective}
+                    </label>
+                </div>
+                <select class="form-select form-select-sm mt-2 d-none" id="grade_${index}" 
+                        name="elective_grade" data-index="${index}">
+                    <option value="">Grade</option>
+                    ${validGrades.map(g => `<option value="${g}">${g}</option>`).join('')}
+                </select>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+    
+    // Add change listeners to checkboxes
+    document.querySelectorAll('.elective-checkbox').forEach((checkbox, index) => {
+        checkbox.addEventListener('change', function() {
+            const gradeSelect = document.getElementById(`grade_${index}`);
+            gradeSelect.classList.toggle('d-none', !this.checked);
+            if (this.checked) {
+                gradeSelect.required = true;
+            } else {
+                gradeSelect.required = false;
+                gradeSelect.value = '';
+            }
+            validateElectiveCount();
+        });
+    });
+}
+
+function validateElectiveCount() {
+    const selected = document.querySelectorAll('.elective-checkbox:checked').length;
+    const remaining = 3 - selected;
+    // You could show a visual indicator here
+}
+
+document.getElementById('manualEntryForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = {
+        name: document.getElementById('fullName').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        category: document.getElementById('category').value,
+        core_subjects: {},
+        electives: {}
+    };
+    
+    // Collect core subjects
+    document.querySelectorAll('select[name="core_subjects"]').forEach(select => {
+        if (select.value) {
+            formData.core_subjects[select.dataset.subject] = select.value;
+        }
+    });
+    
+    // Collect electives
+    document.querySelectorAll('.elective-checkbox:checked').forEach(checkbox => {
+        const index = checkbox.id.split('_')[1];
+        const gradeSelect = document.getElementById(`grade_${index}`);
+        if (gradeSelect.value) {
+            formData.electives[checkbox.value] = gradeSelect.value;
+        }
+    });
+    
+    // Validation
+    let errors = [];
+    
+    if (!formData.name) errors.push('Full name is required');
+    if (!formData.category) errors.push('Course category is required');
+    if (Object.keys(formData.core_subjects).length < 3) errors.push('All core subjects must have grades');
+    if (Object.keys(formData.electives).length !== 3) errors.push('Exactly 3 electives must be selected');
+    
+    if (errors.length > 0) {
+        showFormError(errors.join('<br>'));
+        return;
+    }
+    
+    // Store data and redirect to verification
+    sessionStorage.setItem('manualEntryData', JSON.stringify(formData));
+    window.location.href = '{{ url_for("main.verify_result") }}';
+});
+
+function showFormError(message) {
+    const errorDiv = document.getElementById('formError');
+    errorDiv.innerHTML = `<strong><i class="fas fa-exclamation-circle"></i> Error:</strong><br> ${message}`;
+    errorDiv.classList.remove('d-none');
+    window.scrollTo(0, 0);
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+    updateCoreSubjects();
+});
+</script>
+{% endblock %}

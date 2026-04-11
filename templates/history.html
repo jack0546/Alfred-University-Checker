@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}My Admission History - Ghana Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12">
+        <h2 class="fw-bold mb-4"><i class="fas fa-history text-primary"></i> My Admission History</h2>
+        
+        {% if submissions %}
+            <div class="row g-4">
+                {% for sub in submissions %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+                        <div class="card-header {% if sub.is_paid %}bg-success{% else %}bg-primary{% endif %} text-white py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">{{ sub.name }}</h5>
+                                <span class="badge bg-white text-dark rounded-pill">{{ sub.aggregate }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted small mb-3">
+                                <i class="far fa-calendar-alt"></i> {{ sub.submission_date.strftime('%d %B %Y, %I:%M %p') }}
+                            </p>
+                            <div class="mb-3">
+                                <strong>Category:</strong> {{ sub.category }}
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if sub.is_paid %}
+                                        <span class="text-success small"><i class="fas fa-check-circle"></i> Paid</span>
+                                    {% else %}
+                                        <span class="text-warning small"><i class="fas fa-clock"></i> Payment Pending</span>
+                                    {% endif %}
+                                </div>
+                                <a href="{{ url_for('main.dashboard', student_id=sub.id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    View Results
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="text-center py-5 bg-light rounded-4">
+                <div class="display-1 text-muted mb-4 opacity-25">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h4>No history found</h4>
+                <p class="text-muted mb-4">You haven't checked any admission results yet.</p>
+                <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary rounded-pill px-4">
+                    <i class="fas fa-plus me-2"></i> New Check
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

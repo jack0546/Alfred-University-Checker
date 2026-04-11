@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In - Ghana Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary">Welcome Back</h2>
+                    <p class="text-muted">Sign in to access your admission history</p>
+                </div>
+
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control form-control-lg rounded-3" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control form-control-lg rounded-3" id="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Remember me</label>
+                    </div>
+                    <div class="d-grid mb-4">
+                        <button type="submit" id="loginBtn" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="loginSpinner"></span>
+                            <i class="fas fa-sign-in-alt me-2" id="loginIcon"></i> Sign In
+                        </button>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <span class="text-muted px-2 bg-white position-relative z-1">OR</span>
+                        <hr class="mt-n2">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="button" onclick="googleSignIn()" class="btn btn-outline-dark btn-lg rounded-pill fw-bold py-3">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" class="me-2"> 
+                            Continue with Google
+                        </button>
+                    </div>
+                </form>
+
+                <div id="authError" class="alert alert-danger d-none mt-3"></div>
+
+
+                <div class="mt-4 text-center">
+                    <p class="mb-0 text-muted">Don't have an account? <a href="{{ url_for('main.register') }}" class="text-primary fw-bold">Sign Up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const loginBtn = document.getElementById('loginBtn');
+    const authError = document.getElementById('authError');
+
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        setLoading(true);
+        hideError();
+
+        try {
+            // Sign in with Firebase
+            const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+
+            // Sync with backend
+            await syncWithBackend(user);
+        } catch (error) {
+            showError(error.message);
+            setLoading(false);
+        }
+    });
+
+    async function googleSignIn() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            const result = await firebase.auth().signInWithPopup(provider);
+            await syncWithBackend(result.user);
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    async function syncWithBackend(firebaseUser) {
+        try {
+            const response = await fetch('{{ url_for("main.firebase_auth") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    displayName: firebaseUser.displayName,
+                    photoURL: firebaseUser.photoURL
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '{{ url_for("main.index") }}';
+            } else {
+                showError(result.error || 'Failed to sync with server');
+                setLoading(false);
+            }
+        } catch (error) {
+            showError('Server communication error');
+            setLoading(false);
+        }
+    }
+
+    function setLoading(isLoading) {
+        loginBtn.disabled = isLoading;
+        document.getElementById('loginSpinner').classList.toggle('d-none', !isLoading);
+        document.getElementById('loginIcon').classList.toggle('d-none', isLoading);
+    }
+
+    function showError(message) {
+        authError.textContent = message;
+        authError.classList.remove('d-none');
+    }
+
+    function hideError() {
+        authError.classList.add('d-none');
+    }
+</script>
+{% endblock %}

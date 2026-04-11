@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Result - Ghana University Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8 offset-lg-2">
+        <h1 class="mb-4"><i class="fas fa-upload"></i> Submit Your WASSCE Result</h1>
+        
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-pane" 
+                        type="button" role="tab" aria-controls="upload-pane" aria-selected="true">
+                    <i class="fas fa-upload"></i> Upload Result Slip (OCR)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual-pane" 
+                        type="button" role="tab" aria-controls="manual-pane" aria-selected="false">
+                    <i class="fas fa-keyboard"></i> Manual Entry
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Upload Tab -->
+            <div class="tab-pane fade show active" id="upload-pane" role="tabpanel" aria-labelledby="upload-tab">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Upload Your Result Slip Image</h5>
+                        
+                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>How it works:</strong> Upload image → Automatic extraction → School eligibility checked instantly
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <form id="uploadForm" enctype="multipart/form-data">
+                            <div class="mb-4">
+                                <label for="resultSlip" class="form-label"><strong>Select Result Slip File</strong></label>
+                                <div class="input-group mb-3">
+                                    <input type="file" class="form-control" id="resultSlip" name="result_slip" 
+                                           accept=".pdf,.jpg,.jpeg,.png,.gif" required>
+                                    <button class="btn btn-primary" type="submit" id="uploadBtn">
+                                        <i class="fas fa-upload"></i> Upload & Process
+                                    </button>
+                                </div>
+                                <div id="uploadProgress" class="progress d-none mb-3">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" 
+                                         id="progressBar" style="width: 100%; background-color: #2563eb;"></div>
+                                </div>
+                                <div id="processingText" class="text-center text-primary d-none mb-3">
+                                    <small><i class="fas fa-spinner fa-spin"></i> <strong>Processing your result slip...</strong> This may take 10-30 seconds</small>
+                                </div>
+                                <small class="form-text text-muted d-block mt-2">
+                                    <i class="fas fa-lightbulb"></i> <strong>Supported formats:</strong> PDF, JPG, PNG | Results will display automatically after processing
+                                </small>
+                            </div>
+                        </form>
+
+                        <!-- Success Message -->
+                        <div id="uploadSuccess" class="alert alert-success d-none alert-dismissible fade show" role="alert">
+                            <h5><i class="fas fa-check-circle"></i> Processing Complete</h5>
+                            <p id="successMessage" class="mb-3"></p>
+                            <div id="extractedInfo" class="mt-3 p-3 bg-light rounded d-none">
+                                <strong>📋 Student Information:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>Name:</strong> <span id="extractedName" class="badge bg-primary"></span></li>
+                                    <li><strong>Category:</strong> <span id="extractedCategory" class="badge bg-info"></span></li>
+                                    <li><strong>Aggregate Score:</strong> <span id="extractedAggregate" class="badge bg-success"></span></li>
+                                </ul>
+                            </div>
+                            <hr class="my-3">
+                            <p class="mb-0 text-muted small"><i class="fas fa-arrow-right"></i> Redirecting to your admission results...</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+
+                        <!-- Error Message -->
+                        <div id="uploadError" class="alert alert-danger d-none alert-dismissible fade show" role="alert">
+                            <h5><i class="fas fa-exclamation-circle"></i> Processing Error</h5>
+                            <p id="errorMessage" class="mb-0"></p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        
+                        <!-- Partial Warning -->
+                        <div id="uploadPartial" class="alert alert-warning d-none alert-dismissible fade show" role="alert">
+                            <h5><i class="fas fa-alert-triangle"></i> Partial Data Extracted</h5>
+                            <p id="partialMessage" class="mb-0">Some information was extracted but needs verification. Please complete on the next screen.</p>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Manual Entry Tab -->
+            <div class="tab-pane fade" id="manual-pane" role="tabpanel" aria-labelledby="manual-tab">
+                <iframe src="{{ url_for('main.manual_entry') }}" style="width: 100%; height: 800px; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const fileInput = document.getElementById('resultSlip');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showError('Please select a file first');
+        return;
+    }
+    
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+        showError('File is too large. Maximum size is 10MB');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('result_slip', file);
+    
+    // Reset and show progress
+    document.getElementById('uploadSuccess').classList.add('d-none');
+    document.getElementById('uploadError').classList.add('d-none');
+    document.getElementById('uploadPartial').classList.add('d-none');
+    document.getElementById('uploadProgress').classList.remove('d-none');
+    document.getElementById('processingText').classList.remove('d-none');
+    document.getElementById('uploadBtn').disabled = true;
+    
+    fetch('{{ url_for("main.upload_result") }}', {
+        method: 'POST',
+        body: formData,
+        timeout: 60000  // 60 second timeout
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById('uploadProgress').classList.add('d-none');
+        document.getElementById('processingText').classList.add('d-none');
+        document.getElementById('uploadBtn').disabled = false;
+        
+        if (data.success) {
+            if (data.auto_extract) {
+                // Automatic processing successful
+                const qualified = data.qualified_count || 0;
+                const borderline = data.borderline_count || 0;
+                let msg = `<strong>✓ Admission Results Ready!</strong><br>`;
+                msg += `Found <strong>${qualified}</strong> qualified programs`;
+                if (borderline > 0) msg += ` and <strong>${borderline}</strong> borderline options`;
+                
+                document.getElementById('successMessage').innerHTML = msg;
+                
+                // Show extracted info
+                if (data.student_name) {
+                    document.getElementById('extractedName').textContent = data.student_name;
+                    document.getElementById('extractedCategory').textContent = data.category || 'Unknown';
+                    document.getElementById('extractedAggregate').textContent = data.aggregate || 'N/A';
+                    document.getElementById('extractedInfo').classList.remove('d-none');
+                }
+                
+                document.getElementById('uploadSuccess').classList.remove('d-none');
+                
+                // Redirect after brief delay
+                setTimeout(() => {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;
+                    }
+                }, 2500);
+            } else if (data.extracted_data) {
+                // Partial extraction
+                document.getElementById('partialMessage').textContent = 'Some information was extracted. Please verify and complete on the next screen.';
+                document.getElementById('uploadPartial').classList.remove('d-none');
+                
+                sessionStorage.setItem('extractedData', JSON.stringify(data.extracted_data));
+                sessionStorage.setItem('filepath', data.filepath);
+                
+                setTimeout(() => {
+                    window.location.href = '{{ url_for("main.verify_result") }}';
+                }, 2000);
+            } else {
+                // No extraction - manual entry
+                document.getElementById('uploadSuccess').classList.remove('d-none');
+                document.getElementById('successMessage').innerHTML = '<strong>✓ File uploaded</strong><br>No grades could be automatically extracted. Please enter them manually.';
+                sessionStorage.setItem('filepath', data.filepath);
+                
+                setTimeout(() => {
+                    document.getElementById('manual-tab').click();
+                }, 2000);
+            }
+        } else {
+            showError(data.error || data.message || 'Upload failed');
+        }
+    })
+    .catch(error => {
+        document.getElementById('uploadProgress').classList.add('d-none');
+        document.getElementById('processingText').classList.add('d-none');
+        document.getElementById('uploadBtn').disabled = false;
+        
+        let errorMsg = error.message || 'Upload failed';
+        if (errorMsg.includes('timeout')) {
+            errorMsg = 'Processing took too long. Please try a smaller or clearer image.';
+        } else if (errorMsg.includes('NetworkError')) {
+            errorMsg = 'Connection lost. Please check your internet.';
+        }
+        
+        showError(errorMsg);
+    });
+});
+
+function showError(msg) {
+    document.getElementById('uploadSuccess').classList.add('d-none');
+    document.getElementById('uploadPartial').classList.add('d-none');
+    document.getElementById('errorMessage').innerHTML = msg;
+    document.getElementById('uploadError').classList.remove('d-none');
+}
+</script>
+{% endblock %}

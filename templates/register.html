@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account - Ghana Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-5">
+                <div class="text-center mb-4">
+                    <h2 class="fw-bold text-primary">Create Account</h2>
+                    <p class="text-muted">Save your results and track your eligibility</p>
+                </div>
+
+                <form id="registerForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control form-control-lg rounded-3" id="name" name="name" required placeholder="John Doe">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control form-control-lg rounded-3" id="email" name="email" required placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control form-control-lg rounded-3" id="password" name="password" required placeholder="••••••••">
+                    </div>
+                    <div class="d-grid mb-4">
+                        <button type="submit" id="registerBtn" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
+                            <span class="spinner-border spinner-border-sm d-none me-2" id="registerSpinner"></span>
+                            <i class="fas fa-user-plus me-2" id="registerIcon"></i> Create Account
+                        </button>
+                    </div>
+
+                    <div class="text-center mb-4">
+                        <span class="text-muted px-2 bg-white position-relative z-1">OR</span>
+                        <hr class="mt-n2">
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="button" onclick="googleSignIn()" class="btn btn-outline-dark btn-lg rounded-pill fw-bold py-3">
+                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" width="20" class="me-2"> 
+                            Sign up with Google
+                        </button>
+                    </div>
+                </form>
+
+                <div id="authError" class="alert alert-danger d-none mt-3"></div>
+
+
+                <div class="mt-4 text-center">
+                    <p class="mb-0 text-muted">Already have an account? <a href="{{ url_for('main.login') }}" class="text-primary fw-bold">Sign In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const registerForm = document.getElementById('registerForm');
+    const registerBtn = document.getElementById('registerBtn');
+    const authError = document.getElementById('authError');
+
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        setLoading(true);
+        hideError();
+
+        try {
+            // Create user in Firebase
+            const userCredential = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            const user = userCredential.user;
+            
+            // Update profile with name
+            await user.updateProfile({ displayName: name });
+
+            // Sync with backend
+            await syncWithBackend(user);
+        } catch (error) {
+            showError(error.message);
+            setLoading(false);
+        }
+    });
+
+    async function googleSignIn() {
+        const provider = new firebase.auth.GoogleAuthProvider();
+        try {
+            const result = await firebase.auth().signInWithPopup(provider);
+            await syncWithBackend(result.user);
+        } catch (error) {
+            showError(error.message);
+        }
+    }
+
+    async function syncWithBackend(firebaseUser) {
+        try {
+            const response = await fetch('{{ url_for("main.firebase_auth") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    displayName: firebaseUser.displayName,
+                    photoURL: firebaseUser.photoURL
+                })
+            });
+            
+            const result = await response.json();
+            if (result.success) {
+                window.location.href = '{{ url_for("main.index") }}';
+            } else {
+                showError(result.error || 'Failed to sync with server');
+                setLoading(false);
+            }
+        } catch (error) {
+            showError('Server communication error');
+            setLoading(false);
+        }
+    }
+
+    function setLoading(isLoading) {
+        registerBtn.disabled = isLoading;
+        document.getElementById('registerSpinner').classList.toggle('d-none', !isLoading);
+        document.getElementById('registerIcon').classList.toggle('d-none', isLoading);
+    }
+
+    function showError(message) {
+        authError.textContent = message;
+        authError.classList.remove('d-none');
+    }
+
+    function hideError() {
+        authError.classList.add('d-none');
+    }
+</script>
+{% endblock %}

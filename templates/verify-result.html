@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Verify Results - Ghana University Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8 offset-lg-2">
+        <h1 class="mb-4"><i class="fas fa-check-circle"></i> Verify Your WASSCE Results</h1>
+        
+        <div class="card">
+            <div class="card-body">
+                <!-- Personal Information Review -->
+                <h5 class="mb-4 border-bottom pb-3"><i class="fas fa-user"></i> Personal Information</h5>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="verifyName" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Category</label>
+                        <input type="text" class="form-control" id="verifyCategory" readonly>
+                    </div>
+                </div>
+
+                <!-- Core Subjects Review -->
+                <h5 class="mb-3 border-bottom pb-3"><i class="fas fa-star"></i> Core Subjects</h5>
+                <div id="coreSubjectsReview" class="mb-4">
+                    <!-- Populated by script -->
+                </div>
+
+                <!-- Electives Review -->
+                <h5 class="mb-3 border-bottom pb-3"><i class="fas fa-plus-circle"></i> Elective Subjects</h5>
+                <div id="electivesReview" class="mb-4">
+                    <!-- Populated by script -->
+                </div>
+
+                <!-- Aggregate Calculation -->
+                <div class="alert alert-info mb-4">
+                    <h5><i class="fas fa-calculator"></i> Aggregate Calculation</h5>
+                    <p class="mb-2">Your aggregate is calculated using the best 3 grades from core subjects and the best 3 from electives.</p>
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <strong>Core Aggregate:</strong> <span id="coreAgg" class="badge bg-primary">-</span>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Electives Aggregate:</strong> <span id="elecAgg" class="badge bg-primary">-</span>
+                        </div>
+                        <div class="col-md-4">
+                            <strong>Total Aggregate:</strong> <span id="totalAgg" class="badge bg-success fs-5">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validation Messages -->
+                <div id="validationMessages" class="mb-4"></div>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-primary" id="confirmBtn" onclick="confirmAndSubmit()">
+                        <i class="fas fa-check"></i> Confirm & Check Admission
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="goBack()">
+                        <i class="fas fa-arrow-left"></i> Edit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Indicator -->
+<div id="loadingIndicator" class="d-none">
+    <div class="position-fixed top-50 start-50 translate-middle">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Checking admission eligibility...</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const grades = {
+    'A1': 1, 'B2': 2, 'B3': 3, 'C4': 4, 'C5': 5, 'C6': 6,
+    'D7': 7, 'E8': 8, 'F9': 9
+};
+
+const passingGrades = ['A1', 'B2', 'B3', 'C4', 'C5', 'C6'];
+
+function loadVerificationData() {
+    let data;
+    
+    // Try to get data from manual entry
+    const manualData = sessionStorage.getItem('manualEntryData');
+    if (manualData) {
+        data = JSON.parse(manualData);
+    } else {
+        // Try to get data from OCR
+        const ocrData = sessionStorage.getItem('extractedSubjects');
+        if (ocrData) {
+            data = {
+                extractedSubjects: JSON.parse(ocrData),
+                filepath: sessionStorage.getItem('filepath')
+            };
+        }
+    }
+    
+    if (!data) {
+        document.getElementById('validationMessages').innerHTML = `
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> No data found. Please upload or enter your results first.
+            </div>
+        `;
+        return;
+    }
+    
+    // Display data
+    if (data.name) {
+        document.getElementById('verifyName').value = data.name;
+        document.getElementById('verifyCategory').value = data.category;
+        displayCoreSubjects(data.core_subjects);
+        displayElectives(data.electives);
+        calculateAggregate(data.core_subjects, data.electives);
+    }
+}
+
+function displayCoreSubjects(subjects) {
+    let html = '<table class="table table-sm"><tbody>';
+    for (const [subject, grade] of Object.entries(subjects)) {
+        const isPassing = passingGrades.includes(grade);
+        const badgeClass = isPassing ? 'bg-success' : 'bg-danger';
+        html += `
+            <tr>
+                <td>${subject}</td>
+                <td><span class="badge ${badgeClass}">${grade}</span></td>
+            </tr>
+        `;
+    }
+    html += '</tbody></table>';
+    document.getElementById('coreSubjectsReview').innerHTML = html;
+}
+
+function displayElectives(electives) {
+    let html = '<table class="table table-sm"><tbody>';
+    for (const [subject, grade] of Object.entries(electives)) {
+        const isPassing = passingGrades.includes(grade);
+        const badgeClass = isPassing ? 'bg-success' : 'bg-danger';
+        html += `
+            <tr>
+                <td>${subject}</td>
+                <td><span class="badge ${badgeClass}">${grade}</span></td>
+            </tr>
+        `;
+    }
+    html += '</tbody></table>';
+    document.getElementById('electivesReview').innerHTML = html;
+}
+
+function calculateAggregate(coreSubjects, electives) {
+    // Get points arrays
+    const corePoints = Object.values(coreSubjects).map(g => grades[g]).sort((a, b) => a - b);
+    const elecPoints = Object.values(electives).map(g => grades[g]).sort((a, b) => a - b);
+    
+    // Get best 3 of each (lowest numbers are best)
+    const coreBest3 = corePoints.slice(0, 3);
+    const elecBest3 = elecPoints.slice(0, 3);
+    
+    const coreAgg = coreBest3.reduce((a, b) => a + b, 0);
+    const elecAgg = elecBest3.reduce((a, b) => a + b, 0);
+    const totalAgg = coreAgg + elecAgg;
+    
+    document.getElementById('coreAgg').textContent = coreAgg;
+    document.getElementById('elecAgg').textContent = elecAgg;
+    document.getElementById('totalAgg').textContent = totalAgg;
+    
+    // Store for later
+    sessionStorage.setItem('calculatedAggregate', JSON.stringify({
+        total: totalAgg,
+        core: coreAgg,
+        elec: elecAgg,
+        coreSubjects: coreSubjects,
+        electives: electives
+    }));
+}
+
+function confirmAndSubmit() {
+    const data = JSON.parse(sessionStorage.getItem('manualEntryData') || '{}');
+    const agg = JSON.parse(sessionStorage.getItem('calculatedAggregate') || '{}');
+    
+    const payload = {
+        name: document.getElementById('verifyName').value,
+        email: data.email || '',
+        category: data.category,
+        core_subjects: data.core_subjects,
+        electives: data.electives
+    };
+    
+    document.getElementById('loadingIndicator').classList.remove('d-none');
+    
+    fetch('{{ url_for("main.verify_result") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('loadingIndicator').classList.add('d-none');
+        
+        if (data.success) {
+            // Redirect to dashboard
+            window.location.href = data.redirect_url;
+        } else {
+            alert('Error: ' + data.error);
+        }
+    })
+    .catch(error => {
+        document.getElementById('loadingIndicator').classList.add('d-none');
+        alert('Error: ' + error.message);
+    });
+}
+
+function goBack() {
+    window.history.back();
+}
+
+document.addEventListener('DOMContentLoaded', loadVerificationData);
+</script>
+{% endblock %}

@@ -1,0 +1,396 @@
+{% extends "base.html" %}
+
+{% block title %}Results Dashboard - Ghana University Admission Checker{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-10 offset-lg-1">
+        <!-- Student Header -->
+        <div class="card bg-primary text-white mb-4">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h2 class="card-title mb-2">{{ student.name }}</h2>
+                        <p class="card-text mb-1"><strong>Category:</strong> {{ student.category }}</p>
+                        <p class="card-text mb-0"><strong>Aggregate Score:</strong> <span class="fs-4 fw-bold">{{ student.aggregate }}</span></p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <div class="display-1 fw-bold opacity-50">{{ student.aggregate }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-success fw-bold">{{ qualified_results|length }}</h5>
+                        <p class="text-muted mb-0"><i class="fas fa-check-circle"></i> Qualified Programs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-warning fw-bold">{{ borderline_results|length }}</h5>
+                        <p class="text-muted mb-0"><i class="fas fa-exclamation-triangle"></i> Borderline Programs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="text-info fw-bold">{{ qualified_results|length + borderline_results|length }}</h5>
+                        <p class="text-muted mb-0"><i class="fas fa-graduation-cap"></i> Total Matches</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- University Eligibility by Program -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title mb-3"><i class="fas fa-university"></i> University Program Eligibility</h5>
+                {% if results_by_university %}
+                    {% for uni_name, uni_data in results_by_university.items() %}
+                    <div class="mb-3">
+                        <h6 class="mb-2">{{ uni_name }} <small class="text-muted">({{ uni_data.university.type }})</small></h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm align-middle mb-2">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Program</th>
+                                        <th>Req. Aggregate</th>
+                                        <th>Status</th>
+                                        <th>Reason</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for result in uni_data.programs %}
+                                    <tr>
+                                        <td>{{ result.program.name }}</td>
+                                        <td>≤ {{ result.program.maximum_aggregate }}</td>
+                                        <td>
+                                            {% if result.status == 'qualified' %}
+                                                <span class="badge bg-success">Qualified</span>
+                                            {% elif result.status == 'borderline' %}
+                                                <span class="badge bg-warning">Borderline</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Not Qualified</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ result.reason or 'Meets required criteria' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle"></i> No university program eligibility results available yet.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Tabs for Results -->
+        <ul class="nav nav-tabs mb-4" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="qualified-tab" data-bs-toggle="tab" data-bs-target="#qualified-pane" 
+                        type="button" role="tab" aria-controls="qualified-pane" aria-selected="true">
+                    <i class="fas fa-check-circle text-success"></i> Qualified ({{ qualified_results|length }})
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="borderline-tab" data-bs-toggle="tab" data-bs-target="#borderline-pane" 
+                        type="button" role="tab" aria-controls="borderline-pane" aria-selected="false">
+                    <i class="fas fa-exclamation-triangle text-warning"></i> Borderline ({{ borderline_results|length }})
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="analysis-tab" data-bs-toggle="tab" data-bs-target="#analysis-pane" 
+                        type="button" role="tab" aria-controls="analysis-pane" aria-selected="false">
+                    <i class="fas fa-chart-bar"></i> Analysis
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content">
+            <!-- Qualified Programs Tab -->
+            <div class="tab-pane fade show active" id="qualified-pane" role="tabpanel" aria-labelledby="qualified-tab">
+                {% if qualified_results %}
+                    <!-- Group by University Type -->
+                    {% if qualified_traditional %}
+                    <h5 class="mb-3"><i class="fas fa-university"></i> Traditional Universities</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>University</th>
+                                    <th>Program</th>
+                                    <th>Requirement</th>
+                                    <th>Your Aggregate</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in qualified_traditional %}
+                                <tr>
+                                    <td><strong>{{ result.program.university.name }}</strong></td>
+                                    <td>
+                                        <div class="fw-bold">{{ result.program.name }}</div>
+                                        <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
+                                    </td>
+                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
+                                    <td><strong>{{ student.aggregate }}</strong></td>
+                                    <td><span class="badge bg-success">Qualified</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary show-details-btn" 
+                                               data-prog-name="{{ result.program.name }}"
+                                               data-uni-name="{{ result.program.university.name }}"
+                                               data-description="{{ result.program.description or 'No description available.' }}"
+                                               data-status="{{ result.status }}"
+                                               data-reason="{{ result.reason }}">
+                                            Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+
+                    {% if qualified_technical %}
+                    <h5 class="mb-3 mt-4"><i class="fas fa-cog"></i> Technical Universities</h5>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>University</th>
+                                    <th>Program</th>
+                                    <th>Requirement</th>
+                                    <th>Your Aggregate</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in qualified_technical %}
+                                <tr>
+                                    <td><strong>{{ result.program.university.name }}</strong></td>
+                                    <td>
+                                        <div class="fw-bold">{{ result.program.name }}</div>
+                                        <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
+                                    </td>
+                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
+                                    <td><strong>{{ student.aggregate }}</strong></td>
+                                    <td><span class="badge bg-success">Qualified</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary show-details-btn" 
+                                               data-prog-name="{{ result.program.name }}"
+                                               data-uni-name="{{ result.program.university.name }}"
+                                               data-description="{{ result.program.description or 'No description available.' }}"
+                                               data-status="{{ result.status }}"
+                                               data-reason="{{ result.reason }}">
+                                            Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% endif %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No qualified programs found.
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Borderline Programs Tab -->
+            <div class="tab-pane fade" id="borderline-pane" role="tabpanel" aria-labelledby="borderline-tab">
+                {% if borderline_results %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-lightbulb"></i> <strong>Borderline Programs:</strong> 
+                        You may be considered for these programs depending on other selection criteria.
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">open in this work
+                                <tr>
+                                    <th>University</th>
+                                    <th>Program</th>
+                                    <th>Requirement</th>
+                                    <th>Your Aggregate</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for result in borderline_results %}
+                                <tr>
+                                    <td><strong>{{ result.program.university.name }}</strong></td>
+                                    <td>
+                                        <div class="fw-bold">{{ result.program.name }}</div>
+                                        <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
+                                    </td>
+                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
+                                    <td><strong>{{ student.aggregate }}</strong></td>
+                                    <td><span class="badge bg-warning">Borderline</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-warning show-details-btn" 
+                                               data-prog-name="{{ result.program.name }}"
+                                               data-uni-name="{{ result.program.university.name }}"
+                                               data-description="{{ result.program.description or 'No description available.' }}"
+                                               data-status="{{ result.status }}"
+                                               data-reason="{{ result.reason }}">
+                                            Details
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> No borderline programs found.
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Analysis Tab -->
+            <div class="tab-pane fade" id="analysis-pane" role="tabpanel" aria-labelledby="analysis-tab">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5>Result Summary</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <p><strong>Student Name:</strong> {{ student.name }}</p>
+                                <p><strong>Course Category:</strong> {{ student.category }}</p>
+                                <p><strong>Total Aggregate:</strong> <span class="badge bg-primary">{{ student.aggregate }}</span></p>
+                                <p><strong>Core Aggregate:</strong> <span class="badge bg-info">{{ student.core_aggregate }}</span></p>
+                                <p><strong>Electives Aggregate:</strong> <span class="badge bg-info">{{ student.electives_aggregate }}</span></p>
+                                <p><strong>Verified Date:</strong> {{ student.submission_date.strftime('%d %B %Y') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Recommendations</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                {% if qualified_traditional and qualified_technical %}
+                                    <div class="alert alert-success">
+                                        <strong>Excellent!</strong> You qualify for both traditional and technical universities.
+                                    </div>
+                                {% elif qualified_technical %}
+                                    <div class="alert alert-info">
+                                        <strong>Good News!</strong> You qualify for technical universities.
+                                    </div>
+                                {% elif qualified_traditional %}
+                                    <div class="alert alert-info">
+                                        <strong>Great!</strong> You qualify for traditional universities.
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-warning">
+                                        <strong>Note:</strong> Review your results and consider retaking to improve your aggregate.
+                                    </div>
+                                {% endif %}
+                                
+                                <h6 class="mt-3">Next Steps:</h6>
+                                <ol class="small">
+                                    <li>Review all qualified programs carefully</li>
+                                    <li>Check university websites for admission portals</li>
+                                    <li>Submit applications by the deadline</li>
+                                    <li>Prepare required documents</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-4 d-flex gap-2 justify-content-center">
+            <a href="{{ url_for('main.universities') }}" class="btn btn-primary">
+                <i class="fas fa-building"></i> View All Universities
+            </a>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
+            <a href="javascript:window.print()" class="btn btn-outline-secondary">
+                <i class="fas fa-print"></i> Print Results
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Program Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.show-details-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        showDetails(
+            this.getAttribute('data-prog-name'),
+            this.getAttribute('data-uni-name'),
+            this.getAttribute('data-description'),
+            this.getAttribute('data-status'),
+            this.getAttribute('data-reason')
+        );
+    });
+});
+
+function showDetails(progName, uniName, description, status, reason) {
+    const modalBody = document.querySelector('#detailsModal .modal-body');
+    const modalTitle = document.querySelector('#detailsModal .modal-title');
+    
+    modalTitle.innerText = progName;
+    
+    let statusBadge = '';
+    if (status === 'qualified') statusBadge = '<span class="badge bg-success">Qualified</span>';
+    else if (status === 'borderline') statusBadge = '<span class="badge bg-warning">Borderline</span>';
+    
+    modalBody.innerHTML = `
+        <div class="mb-3">
+            <h6 class="text-primary fw-bold">${uniName}</h6>
+            <div class="mb-2">${statusBadge}</div>
+        </div>
+        <div class="mb-4">
+            <h6>Program Description:</h6>
+            <p class="text-muted">${description}</p>
+        </div>
+        <div class="p-3 bg-light rounded">
+            <h6>Admission Analysis:</h6>
+            <p class="mb-0 small">${reason}</p>
+        </div>
+    `;
+    
+    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

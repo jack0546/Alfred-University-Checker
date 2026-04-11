@@ -89,13 +89,13 @@ config = {
     'default': DevelopmentConfig
 }
 
-# New: Firebase Configuration from Environment
+# Firebase Configuration from Environment (with fallbacks)
 def get_firebase_config():
     return {
-        "apiKey": os.environ.get('FIREBASE_API_KEY'),
-        "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN'),
-        "projectId": os.environ.get('FIREBASE_PROJECT_ID'),
-        "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET'),
-        "messagingSenderId": os.environ.get('FIREBASE_MESSAGING_SENDER_ID'),
-        "appId": os.environ.get('FIREBASE_APP_ID')
+        "apiKey": os.environ.get('FIREBASE_API_KEY', 'AIzaSyBOmO2zO0qSUhB9CEJ8ynFNwURLvJyiY4A'),
+        "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN', 'studio-2794193502-1482b.firebaseapp.com'),
+        "projectId": os.environ.get('FIREBASE_PROJECT_ID', 'studio-2794193502-1482b'),
+        "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET', 'studio-2794193502-1482b.firebasestorage.app'),
+        "messagingSenderId": os.environ.get('FIREBASE_MESSAGING_SENDER_ID', '800219501363'),
+        "appId": os.environ.get('FIREBASE_APP_ID', '1:800219501363:web:a5562f6c0af41180112446')
     }

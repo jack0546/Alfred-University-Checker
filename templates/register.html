@@ -102,7 +102,10 @@
         try {
             const response = await fetch('{{ url_for("main.firebase_auth") }}', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
                 body: JSON.stringify({
                     uid: firebaseUser.uid,
                     email: firebaseUser.email,

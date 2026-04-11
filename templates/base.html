@@ -12,6 +12,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <!-- PWA Theme Color -->
+    <meta name="theme-color" content="#0d6efd">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Admission Checker">
 
     {% block extra_css %}{% endblock %}
 
@@ -117,7 +124,7 @@
             </div>
             <hr class="my-3">
             <div class="text-center text-muted small">
-                <p>&copy; 2024 Alfred University Admission Checker. All rights reserved.</p>
+                <p>&copy; 2026 Alfred University Admission Checker. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -145,6 +152,13 @@
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+
+        // Register Service Worker for PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('{{ url_for("static", filename="service-worker.js") }}')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        }
     </script>
 
     {% block extra_js %}{% endblock %}

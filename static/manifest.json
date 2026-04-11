@@ -1,0 +1,12 @@
+{
+  "name": "Alfred University Admission Checker",
+  "short_name": "Admission Checker",
+  "description": "Check university admission eligibility in Ghana based on WASSCE results",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "orientation": "portrait-primary",
+  "categories": ["education", "business"],
+  "prefer_related_applications": false
+}

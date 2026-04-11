@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Alfred University Admission Checker{% endblock %}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+
     {% block extra_css %}{% endblock %}
-    
+
     <!-- CSRF Token for AJAX -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
+
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light sticky-top">
@@ -43,18 +45,25 @@
                         <a class="nav-link" href="{{ url_for('main.history') }}">History</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle fw-bold text-primary" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-circle"></i> {{ current_user.name or current_user.email.split('@')[0] }}
+                        <a class="nav-link dropdown-toggle fw-bold text-primary" href="#" id="navbarDropdown"
+                            role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> {{ current_user.name or current_user.email.split('@')[0]
+                            }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                            <li><a class="dropdown-item" href="{{ url_for('main.history') }}"><i class="fas fa-list-ul me-2"></i> My Results</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="{{ url_for('main.logout') }}"><i class="fas fa-sign-out-alt me-2"></i> Sign Out</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('main.history') }}"><i
+                                        class="fas fa-list-ul me-2"></i> My Results</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item text-danger" href="{{ url_for('main.logout') }}"><i
+                                        class="fas fa-sign-out-alt me-2"></i> Sign Out</a></li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-primary rounded-pill px-3 ms-2" href="{{ url_for('main.login') }}">Sign In</a>
+                        <a class="nav-link btn btn-outline-primary rounded-pill px-3 ms-2"
+                            href="{{ url_for('main.login') }}">Sign In</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -66,14 +75,15 @@
     <main class="py-4">
         <div class="container">
             {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+                role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
             {% endwith %}
 
             {% block content %}{% endblock %}
@@ -86,25 +96,28 @@
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <h5 class="mb-2">Alfred University Admission Checker</h5>
-                    <p class="text-muted small">Helping students find their perfect university program with accurate eligibility checks.</p>
+                    <p class="text-muted small">Helping students find their perfect university program with accurate
+                        eligibility checks.</p>
                 </div>
                 <div class="col-md-4 mb-3">
                     <h5 class="mb-2">Quick Links</h5>
                     <ul class="list-unstyled">
                         <li><a href="{{ url_for('main.index') }}" class="text-decoration-none">Home</a></li>
-                        <li><a href="{{ url_for('main.manual_entry') }}" class="text-decoration-none">Check Eligibility</a></li>
-                        <li><a href="{{ url_for('main.universities') }}" class="text-decoration-none">Universities</a></li>
+                        <li><a href="{{ url_for('main.manual_entry') }}" class="text-decoration-none">Check
+                                Eligibility</a></li>
+                        <li><a href="{{ url_for('main.universities') }}" class="text-decoration-none">Universities</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-md-4 mb-3">
                     <h5 class="mb-2">Contact & Support</h5>
-                    <p class="text-muted small mb-1">Email: akweteyalfred3@gmail.com</p>
+                    <p class="text-muted small mb-1">Email: akweteyalfred3@gmail.</p>
                     <p class="text-muted small">Phone: +233 532340875</p>
                 </div>
             </div>
             <hr class="my-3">
             <div class="text-center text-muted small">
-                <p>&copy; 2026 Alfred University Admission Checker. All rights reserved.</p>
+                <p>&copy; 2024 Alfred University Admission Checker. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -115,25 +128,26 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Custom JS -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-    
+
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    
+
     <script>
         // Firebase configuration (Loaded securely from environment via Backend)
         const firebaseConfig = {
-          apiKey: "{{ firebase_config.apiKey }}",
-          authDomain: "{{ firebase_config.authDomain }}",
-          projectId: "{{ firebase_config.projectId }}",
-          storageBucket: "{{ firebase_config.storageBucket }}",
-          messagingSenderId: "{{ firebase_config.messagingSenderId }}",
-          appId: "{{ firebase_config.appId }}"
+            apiKey: "{{ firebase_config.apiKey }}",
+            authDomain: "{{ firebase_config.authDomain }}",
+            projectId: "{{ firebase_config.projectId }}",
+            storageBucket: "{{ firebase_config.storageBucket }}",
+            messagingSenderId: "{{ firebase_config.messagingSenderId }}",
+            appId: "{{ firebase_config.appId }}"
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
     </script>
-    
+
     {% block extra_js %}{% endblock %}
 </body>
+
 </html>

@@ -104,8 +104,12 @@
         }
     }).catch((error) => {
         console.error("Redirect result error:", error);
+        console.error("Error code:", error.code);
+        console.error("Error message:", error.message);
         if (error.code === 'auth/internal-error') {
-            showError("Google Sign-In failed. Please add 'alfredakwetey.me' to Firebase Authorized Domains (Firebase Console → Authentication → Settings → Authorized Domains).");
+            showError("Google Sign-In failed. Please add 'alfredakwetey.me' to Firebase Authorized Domains.");
+        } else if (error.code === 'auth/unauthorized-domain') {
+            showError("This domain is not authorized. Add 'alfredakwetey.me' to Firebase Authorized Domains.");
         } else if (error.code && error.code !== 'auth/no-auth-event') {
             showError(error.message);
         }

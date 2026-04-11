@@ -123,6 +123,16 @@
         }
     }
 
+    // Automated Google Login: Check if user is already signed into Firebase
+    firebase.auth().onAuthStateChanged(async (user) => {
+        if (user && !{{ 'true' if current_user.is_authenticated else 'false' }}) {
+            // User is signed into Firebase but not Flask session
+            console.log("Automated sync for existing Firebase user:", user.email);
+            setLoading(true);
+            await syncWithBackend(user);
+        }
+    });
+
     function setLoading(isLoading) {
         loginBtn.disabled = isLoading;
         document.getElementById('loginSpinner').classList.toggle('d-none', !isLoading);

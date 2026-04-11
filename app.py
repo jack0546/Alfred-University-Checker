@@ -35,8 +35,9 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
             'https://cdnjs.cloudflare.com',
             'https://www.gstatic.com',
             'https://*.googleapis.com',
-            'https://js.paystack.co',
             'https://fonts.gstatic.com',
+            'https://*.paystack.co',
+            'https://paystack.com',
             'data:'
         ],
         'script-src': [
@@ -45,6 +46,19 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
             'https://cdn.jsdelivr.net',
             'https://www.gstatic.com',
             'https://js.paystack.co'
+        ],
+        'connect-src': [
+            '\'self\'',
+            'https://*.paystack.co',
+            'https://paystack.com',
+            'https://*.googleapis.com',
+            'https://www.gstatic.com'
+        ],
+        'frame-src': [
+            '\'self\'',
+            'https://js.paystack.co',
+            'https://standard.paystack.co',
+            'https://checkout.paystack.com'
         ],
         'style-src': [
             '\'self\'',

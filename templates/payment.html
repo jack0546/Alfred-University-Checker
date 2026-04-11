@@ -80,6 +80,13 @@
     });
 
     function payWithPaystack() {
+        if (typeof PaystackPop === 'undefined') {
+            alert('Payment library not loaded. Please disable any ad-blockers and refresh the page.');
+            console.error('PaystackPop is undefined');
+            return;
+        }
+
+        console.log("Opening Paystack for email:", userEmail);
         let handler = PaystackPop.setup({
             key: publicKey,
             email: userEmail,

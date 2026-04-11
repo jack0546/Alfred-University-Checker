@@ -63,6 +63,7 @@
     const loginBtn = document.getElementById('loginBtn');
     const authError = document.getElementById('authError');
 
+    // ── Email / Password Login ──────────────────────────────────────────────
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('email').value;
@@ -72,40 +73,54 @@
         hideError();
 
         try {
-            // Sign in with Firebase
             const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-            const user = userCredential.user;
-
-            // Sync with backend
-            await syncWithBackend(user);
+            await syncWithBackend(userCredential.user);
         } catch (error) {
             showError(error.message);
             setLoading(false);
         }
     });
 
+    // ── Google Sign-In using REDIRECT (more reliable than popup on Render) ──
     async function googleSignIn() {
-        const provider = new firebase.auth.GoogleAuthProvider();
         try {
-            const result = await firebase.auth().signInWithPopup(provider);
-            await syncWithBackend(result.user);
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            await firebase.auth().signInWithRedirect(provider);
+            // Page will redirect to Google, then come back
         } catch (error) {
-            console.error("Firebase Auth Error:", error);
-            if (error.code === 'auth/internal-error') {
-                showError("Firebase Internal Error. Please check if your domain 'onrender.com' is added to the Authorized Domains in Firebase Console.");
-            } else {
-                showError(error.message);
-            }
+            console.error("Google redirect error:", error);
+            showError("Could not start Google Sign-In. " + error.message);
         }
     }
 
+    // ── Handle the redirect result when page loads back ─────────────────────
+    firebase.auth().getRedirectResult().then(async (result) => {
+        if (result && result.user) {
+            console.log("Redirect result received for:", result.user.email);
+            setLoading(true);
+            await syncWithBackend(result.user);
+        }
+    }).catch((error) => {
+        console.error("Redirect result error:", error);
+        if (error.code === 'auth/internal-error') {
+            showError("Firebase config error. Ensure your Render domain is added to Firebase → Authentication → Authorized Domains.");
+        } else if (error.code && error.code !== 'auth/no-auth-event') {
+            showError(error.message);
+        }
+    });
+
+    // ── Sync Firebase user to Flask session ─────────────────────────────────
     async function syncWithBackend(firebaseUser) {
+        console.log("Syncing with backend for:", firebaseUser.email);
         try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]');
             const response = await fetch('{{ url_for("main.firebase_auth") }}', {
                 method: 'POST',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRFToken': csrfToken ? csrfToken.getAttribute('content') : ''
                 },
                 body: JSON.stringify({
                     uid: firebaseUser.uid,
@@ -114,7 +129,15 @@
                     photoURL: firebaseUser.photoURL
                 })
             });
-            
+
+            console.log("Server response status:", response.status);
+
+            if (!response.ok) {
+                const errorBody = await response.text();
+                console.error("Server error:", errorBody.substring(0, 200));
+                throw new Error('Server error ' + response.status);
+            }
+
             const result = await response.json();
             if (result.success) {
                 window.location.href = '{{ url_for("main.index") }}';
@@ -123,20 +146,11 @@
                 setLoading(false);
             }
         } catch (error) {
-            showError('Server communication error');
+            console.error("Sync error:", error);
+            showError('Server communication error: ' + error.message);
             setLoading(false);
         }
     }
-
-    // Automated Google Login: Check if user is already signed into Firebase
-    firebase.auth().onAuthStateChanged(async (user) => {
-        if (user && !{{ 'true' if current_user.is_authenticated else 'false' }}) {
-            // User is signed into Firebase but not Flask session
-            console.log("Automated sync for existing Firebase user:", user.email);
-            setLoading(true);
-            await syncWithBackend(user);
-        }
-    });
 
     function setLoading(isLoading) {
         loginBtn.disabled = isLoading;
@@ -154,3 +168,4 @@
     }
 </script>
 {% endblock %}
+

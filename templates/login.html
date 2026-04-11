@@ -19,11 +19,19 @@
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control form-control-lg rounded-3" id="password" name="password" required placeholder="••••••••">
+                        <div class="input-group flex-nowrap">
+                            <input type="password" class="form-control form-control-lg border-end-0" style="border-top-left-radius: 0.5rem; border-bottom-left-radius: 0.5rem;" id="password" name="password" required placeholder="••••••••">
+                            <span class="input-group-text bg-white border-start-0" id="togglePassword" style="cursor: pointer; border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem;">
+                                <i class="fas fa-eye text-muted" id="togglePasswordIcon"></i>
+                            </span>
+                        </div>
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
-                        <label class="form-check-label" for="remember">Remember me</label>
+                    <div class="mb-3 d-flex justify-content-between align-items-center">
+                        <div class="form-check mb-0">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">Remember me</label>
+                        </div>
+                        <a href="#" id="forgotPasswordLink" class="text-decoration-none small text-primary fw-bold">Forgot Password?</a>
                     </div>
                     <div class="d-grid mb-4">
                         <button type="submit" id="loginBtn" class="btn btn-primary btn-lg rounded-pill fw-bold py-3 shadow-sm">
@@ -59,9 +67,50 @@
 
 {% block extra_js %}
 <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
+    const togglePasswordIcon = document.getElementById('togglePasswordIcon');
+
+    togglePassword.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePasswordIcon.classList.toggle('fa-eye');
+        togglePasswordIcon.classList.toggle('fa-eye-slash');
+    });
+
     const loginForm = document.getElementById('loginForm');
     const loginBtn = document.getElementById('loginBtn');
     const authError = document.getElementById('authError');
+    const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+
+    // ── Forgot Password ─────────────────────────────────────────────────────
+    forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        
+        hideError();
+        
+        if (!email) {
+            showError("Please enter your email address first to reset your password.");
+            return;
+        }
+
+        const originalText = forgotPasswordLink.textContent;
+        forgotPasswordLink.textContent = "Sending...";
+        forgotPasswordLink.style.pointerEvents = "none";
+
+        try {
+            await firebase.auth().sendPasswordResetEmail(email);
+            authError.className = 'alert alert-success mt-3';
+            authError.textContent = "Password reset email sent! Check your inbox.";
+            authError.classList.remove('d-none');
+        } catch (error) {
+            showError("Failed to send reset email: " + error.message);
+        } finally {
+            forgotPasswordLink.textContent = originalText;
+            forgotPasswordLink.style.pointerEvents = "auto";
+        }
+    });
 
     // ── Email / Password Login ──────────────────────────────────────────────
     loginForm.addEventListener('submit', async (e) => {
@@ -163,6 +212,7 @@
     }
 
     function showError(message) {
+        authError.className = 'alert alert-danger mt-3';
         authError.textContent = message;
         authError.classList.remove('d-none');
     }

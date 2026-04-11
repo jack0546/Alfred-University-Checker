@@ -201,11 +201,18 @@ function confirmAndSubmit() {
     fetch('{{ url_for("main.verify_result") }}', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify(payload)
     })
-    .then(response => response.json())
+    .then(async response => {
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}`);
+        }
+        return response.json();
+    })
     .then(data => {
         document.getElementById('loadingIndicator').classList.add('d-none');
         

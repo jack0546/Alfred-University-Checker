@@ -25,7 +25,9 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
     if app.config['DEBUG']:
         CORS(app)
     else:
-        CORS(app, resources={r"/api/*": {"origins": ["http://alfredakwetey.me", "https://alfredakwetey.me"]}})
+        # Add your Render domain(s) here
+        render_domains = os.environ.get('ALLOWED_ORIGINS', 'https://alfredakwetey.me').split(',')
+        CORS(app, resources={r"/api/*": {"origins": render_domains}})
 
     # Security Headers (Talisman)
     csp = {
@@ -52,13 +54,16 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
             'https://*.paystack.co',
             'https://paystack.com',
             'https://*.googleapis.com',
-            'https://www.gstatic.com'
+            'https://www.gstatic.com',
+            'https://identitytoolkit.googleapis.com',
+            'https://securetoken.googleapis.com'
         ],
         'frame-src': [
             '\'self\'',
             'https://js.paystack.co',
             'https://standard.paystack.co',
-            'https://checkout.paystack.com'
+            'https://checkout.paystack.com',
+            'https://accounts.google.com'
         ],
         'style-src': [
             '\'self\'',

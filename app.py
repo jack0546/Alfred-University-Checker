@@ -5,18 +5,59 @@ Main Application Entry Point
 from flask import Flask, render_template
 from flask_cors import CORS
 from flask_login import LoginManager
-from config import Config, config
+from flask_talisman import Talisman
+from flask_wtf.csrf import CSRFProtect
+from config import Config, config, get_firebase_config
 import os
+from dotenv import load_dotenv
 
-def create_app(config_name='development'):
+# Load environment variables
+load_dotenv()
+
+def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
     """Application factory"""
     app = Flask(__name__)
     
     # Load configuration
     app.config.from_object(config[config_name])
     
-    # Enable CORS
-    CORS(app)
+    # Enable CORS (Restricted to trusted origins in production)
+    if app.config['DEBUG']:
+        CORS(app)
+    else:
+        CORS(app, resources={r"/api/*": {"origins": ["http://alfredakwetey.me", "https://alfredakwetey.me"]}})
+
+    # Security Headers (Talisman)
+    csp = {
+        'default-src': [
+            '\'self\'',
+            'https://cdn.jsdelivr.net',
+            'https://cdnjs.cloudflare.com',
+            'https://www.gstatic.com',
+            'https://*.googleapis.com',
+            'https://js.paystack.co',
+            'https://fonts.gstatic.com',
+            'data:'
+        ],
+        'script-src': [
+            '\'self\'',
+            '\'unsafe-inline\'',
+            'https://cdn.jsdelivr.net',
+            'https://www.gstatic.com',
+            'https://js.paystack.co'
+        ],
+        'style-src': [
+            '\'self\'',
+            '\'unsafe-inline\'',
+            'https://cdn.jsdelivr.net',
+            'https://fonts.googleapis.com',
+            'https://cdnjs.cloudflare.com'
+        ]
+    }
+    Talisman(app, content_security_policy=csp, force_https=(not app.config['DEBUG']))
+
+    # CSRF Protection
+    csrf = CSRFProtect(app)
     
     # Initialize Login Manager
     login_manager = LoginManager()
@@ -43,6 +84,11 @@ def create_app(config_name='development'):
     # Register blueprints
     from routes import main_bp
     app.register_blueprint(main_bp)
+
+    # Context Processor for Firebase Config
+    @app.context_processor
+    def inject_firebase():
+        return dict(firebase_config=get_firebase_config())
     
     # Error handlers
     @app.errorhandler(404)

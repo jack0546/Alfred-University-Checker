@@ -118,14 +118,14 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     
     <script>
-        // Firebase configuration
+        // Firebase configuration (Loaded securely from environment via Backend)
         const firebaseConfig = {
-          apiKey: "AIzaSyBOmO2zO0qSUhB9CEJ8ynFNwURLvJyiY4A",
-          authDomain: "studio-2794193502-1482b.firebaseapp.com",
-          projectId: "studio-2794193502-1482b",
-          storageBucket: "studio-2794193502-1482b.firebasestorage.app",
-          messagingSenderId: "800219501363",
-          appId: "1:800219501363:web:a5562f6c0af41180112446"
+          apiKey: "{{ firebase_config.apiKey }}",
+          authDomain: "{{ firebase_config.authDomain }}",
+          projectId: "{{ firebase_config.projectId }}",
+          storageBucket: "{{ firebase_config.storageBucket }}",
+          messagingSenderId: "{{ firebase_config.messagingSenderId }}",
+          appId: "{{ firebase_config.appId }}"
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);

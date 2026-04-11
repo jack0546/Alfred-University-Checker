@@ -8,7 +8,13 @@ class Config:
     BASE_DIR = os.path.abspath(os.path.dirname(__file__))
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(BASE_DIR, 'admission_checker.db')}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'ghana-admission-checker-secret-key-2024'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-change-this-in-env-file'
+    
+    # Extra Security Settings
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() == 'true'
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = 3600 # 1 hour
     
     # Upload settings
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
@@ -72,6 +78,9 @@ class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
     TESTING = False
+    # Enforce HTTPS in production
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'Strict'
 
 config = {
     'development': DevelopmentConfig,
@@ -79,3 +88,14 @@ config = {
     'production': ProductionConfig,
     'default': DevelopmentConfig
 }
+
+# New: Firebase Configuration from Environment
+def get_firebase_config():
+    return {
+        "apiKey": os.environ.get('FIREBASE_API_KEY'),
+        "authDomain": os.environ.get('FIREBASE_AUTH_DOMAIN'),
+        "projectId": os.environ.get('FIREBASE_PROJECT_ID'),
+        "storageBucket": os.environ.get('FIREBASE_STORAGE_BUCKET'),
+        "messagingSenderId": os.environ.get('FIREBASE_MESSAGING_SENDER_ID'),
+        "appId": os.environ.get('FIREBASE_APP_ID')
+    }

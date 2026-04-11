@@ -1,5 +1,7 @@
 setuptools
 wheel
+six
+python-bidi==0.4.2
 Flask>=2.3.0
 Flask-SQLAlchemy>=3.0.3
 Flask-CORS>=4.0.0

@@ -90,7 +90,12 @@
             const result = await firebase.auth().signInWithPopup(provider);
             await syncWithBackend(result.user);
         } catch (error) {
-            showError(error.message);
+            console.error("Firebase Auth Error:", error);
+            if (error.code === 'auth/internal-error') {
+                showError("Firebase Internal Error. Please check if your domain 'onrender.com' is added to the Authorized Domains in Firebase Console.");
+            } else {
+                showError(error.message);
+            }
         }
     }
 

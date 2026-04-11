@@ -56,7 +56,17 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
             'https://*.googleapis.com',
             'https://www.gstatic.com',
             'https://identitytoolkit.googleapis.com',
-            'https://securetoken.googleapis.com'
+            'https://securetoken.googleapis.com',
+            'https://firebase.googleapis.com',
+            'https://*.firebase.com'
+        ],
+        'frame-src': [
+            '\'self\'',
+            'https://js.paystack.co',
+            'https://standard.paystack.co',
+            'https://checkout.paystack.co',
+            'https://accounts.google.com',
+            'https://*.firebase.com'
         ],
         'frame-src': [
             '\'self\'',

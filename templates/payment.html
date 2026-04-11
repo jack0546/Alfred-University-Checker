@@ -103,7 +103,7 @@
         payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Verifying...';
 
         try {
-            const response = await fetch(`/verify-payment/${studentId}`, {
+            const response = await fetch("{{ url_for('main.verify_payment', student_id=student.id) }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -111,6 +111,11 @@
                 },
                 body: JSON.stringify({ reference: reference })
             });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Server returned ${response.status}: ${errorText.substring(0, 100)}`);
+            }
 
             const data = await response.json();
             if (data.success) {

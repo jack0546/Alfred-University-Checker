@@ -226,8 +226,10 @@ def dashboard():
 def verify_payment(student_id):
     """Verify payment with Paystack"""
     data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'error': 'Invalid request data'}), 400
+        
     reference = data.get('reference')
-    
     if not reference:
         return jsonify({'success': False, 'error': 'Payment reference missing'}), 400
     

@@ -12,8 +12,8 @@
                 Alfred  University Admission Checker
             </h1>
             <p class="lead mb-4 fs-5">Discover which universities and programs you're eligible for with your WASSCE results</p>
-            <a href="{{ url_for('main.upload_result') }}" class="btn btn-primary btn-lg px-4 py-3">
-                <i class="fas fa-upload me-2"></i> Get Started Now
+            <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-4 py-3">
+                <i class="fas fa-edit me-2"></i> Start Manual Entry
             </a>
         </div>
     </div>
@@ -25,10 +25,10 @@
         <div class="card h-100 shadow-sm border-0 bg-white">
             <div class="card-body text-center p-4">
                 <div class="mb-3">
-                    <i class="fas fa-file-upload fa-3x text-primary"></i>
+                    <i class="fas fa-edit fa-3x text-primary"></i>
                 </div>
-                <h5 class="card-title fw-bold mb-3">Upload Result Slip</h5>
-                <p class="card-text text-muted">Upload your WASSCE result slip (PDF, JPG, PNG) for automatic grade extraction using OCR technology.</p>
+                <h5 class="card-title fw-bold mb-3">Manual Grade Entry</h5>
+                <p class="card-text text-muted">Enter your WASSCE grades manually using our intuitive and fast selection form.</p>
             </div>
         </div>
     </div>
@@ -174,9 +174,9 @@
     <div class="col-lg-10 offset-lg-1">
         <div class="bg-primary text-white p-5 rounded shadow text-center">
             <h2 class="fw-bold mb-3">Ready to Check Your Eligibility?</h2>
-            <p class="fs-5 mb-4 opacity-75">Upload your WASSCE result and discover which programs you qualify for</p>
-            <a href="{{ url_for('main.upload_result') }}" class="btn btn-light btn-lg px-4 py-3 shadow">
-                <i class="fas fa-arrow-right me-2"></i> Start Checking Now
+            <p class="fs-5 mb-4 opacity-75">Enter your WASSCE results manually and discover which programs you qualify for</p>
+            <a href="{{ url_for('main.manual_entry') }}" class="btn btn-light btn-lg px-4 py-3 shadow">
+                <i class="fas fa-arrow-right me-2"></i> Start Now
             </a>
         </div>
     </div>

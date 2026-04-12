@@ -10,7 +10,12 @@ class Config:
     if _db_url and _db_url.startswith('postgres://'):
         _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
         
-    SQLALCHEMY_DATABASE_URI = _db_url or f"sqlite:///{os.path.join(BASE_DIR, 'admission_checker.db')}"
+    if os.environ.get('VERCEL'):
+        fallback_db = "sqlite:////tmp/admission_checker.db"
+    else:
+        fallback_db = f"sqlite:///{os.path.join(BASE_DIR, 'admission_checker.db')}"
+        
+    SQLALCHEMY_DATABASE_URI = _db_url or fallback_db
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-key-change-this-in-env-file'
     

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <!-- Background rounded square matching theme color -->
+    <rect width="512" height="512" rx="100" fill="#0d6efd" />
+    
+    <!-- White graduation cap centered -->
+    <g transform="translate(128, 128) scale(0.5)">
+        <path fill="#ffffff" d="M320 32L0 192l320 160 256-128v128h64V160L320 32z M64 251.3v96.2c0 14.8 6.4 29.3 17.5 39.1 40.5 35.8 113.6 57.6 150.5 61.4V365c-29.4-9.3-51.5-30.4-55.5-34l-5.5-4.8 16-18.4 5.5 4.8c4.2 3.7 27.6 22.8 56.5 28.5V472.5c-43.5-3.5-116.3-25.9-165-69C74.6 394.2 64 366.1 64 347.5V251.3z" />
+    </g>
+</svg>

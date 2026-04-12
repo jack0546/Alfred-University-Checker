@@ -47,6 +47,11 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.universities') }}">Universities</a>
                     </li>
+                    <li class="nav-item d-none" id="installContainer">
+                        <a class="nav-link text-success fw-bold" href="#" id="installBtn">
+                            <i class="fas fa-download"></i> Install App
+                        </a>
+                    </li>
                     {% if current_user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.history') }}">History</a>
@@ -158,6 +163,38 @@
             navigator.serviceWorker.register('{{ url_for("static", filename="service-worker.js") }}')
                 .then(reg => console.log('Service Worker registered'))
                 .catch(err => console.log('Service Worker registration failed:', err));
+        }
+
+        // Handle PWA Installation
+        let deferredPrompt;
+        const installContainer = document.getElementById('installContainer');
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
+            if (installContainer) installContainer.classList.remove('d-none');
+        });
+
+        if (installBtn) {
+            installBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                if (!deferredPrompt) return;
+                
+                // Show the prompt
+                deferredPrompt.prompt();
+                // Wait for the user to respond to the prompt
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response to the install prompt: ${outcome}`);
+                
+                // We no longer need the prompt.  Clear it up.
+                deferredPrompt = null;
+                // Hide the install button
+                installContainer.classList.add('d-none');
+            });
         }
     </script>
 

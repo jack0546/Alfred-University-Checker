@@ -8,5 +8,13 @@
   "theme_color": "#0d6efd",
   "orientation": "portrait-primary",
   "categories": ["education", "business"],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "/static/icons/icon.svg",
+      "sizes": "192x192 512x512 any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
 }

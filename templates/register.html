@@ -107,37 +107,30 @@
     async function googleSignIn() {
         const provider = new firebase.auth.GoogleAuthProvider();
         try {
-            // Use redirect instead of popup for better compatibility
-            await firebase.auth().signInWithRedirect(provider);
-        } catch (error) {
-            console.error("Firebase Auth Error:", error);
-            if (error.code === 'auth/popup-closed-by-user') {
-                showError("Sign-in was cancelled. Please try again.");
-            } else if (error.code === 'auth/internal-error') {
-                showError("Authentication failed. Please ensure your domain is added to Firebase Authorized Domains.");
-            } else {
-                showError(error.message);
+            hideError();
+            setLoading(true);
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('email');
+            provider.addScope('profile');
+            const result = await firebase.auth().signInWithPopup(provider);
+            if (result && result.user) {
+                console.log("Popup result received for:", result.user.email);
+                await syncWithBackend(result.user);
             }
+        } catch (error) {
             setLoading(false);
+            console.error("Google popup error:", error);
+            if (error.code === 'auth/popup-closed-by-user') {
+                // User simply closed the popup, no action needed
+            } else if (error.code === 'auth/internal-error') {
+                showError("Google Sign-In failed. Make sure you authorized this URL in Google Cloud Console 'JavaScript Origins'.");
+            } else if (error.code === 'auth/unauthorized-domain') {
+                showError("This domain is not authorized in Firebase Console Settings.");
+            } else {
+                showError("Could not complete Google Sign-In. " + error.message);
+            }
         }
     }
-
-    // Handle redirect result
-    firebase.auth().getRedirectResult().then(async (result) => {
-        if (result && result.user) {
-            await syncWithBackend(result.user);
-        }
-    }).catch((error) => {
-        console.error("Redirect error:", error);
-        console.error("Error code:", error.code);
-        if (error.code === 'auth/internal-error') {
-            showError("Google Sign-In failed. Make sure you authorized this URL in Google Cloud Console 'JavaScript Origins'.");
-        } else if (error.code === 'auth/unauthorized-domain') {
-            showError("This domain is not authorized in Firebase Console Settings.");
-        } else {
-            showError(error.message);
-        }
-    });
 
     async function syncWithBackend(firebaseUser) {
         try {

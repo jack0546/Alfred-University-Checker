@@ -26,7 +26,11 @@ class Config:
     PERMANENT_SESSION_LIFETIME = 3600 # 1 hour
     
     # Upload settings
-    UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+    if os.environ.get('VERCEL'):
+        UPLOAD_FOLDER = '/tmp/uploads'
+    else:
+        UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+        
     ALLOWED_EXTENSIONS = {'pdf', 'jpg', 'jpeg', 'png'}
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB max file size
     

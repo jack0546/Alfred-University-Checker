@@ -131,9 +131,9 @@
         console.error("Redirect error:", error);
         console.error("Error code:", error.code);
         if (error.code === 'auth/internal-error') {
-            showError("Google Sign-In failed. Please add 'alfredakwetey.me' to Firebase Authorized Domains.");
+            showError("Google Sign-In failed. Make sure you authorized this URL in Google Cloud Console 'JavaScript Origins'.");
         } else if (error.code === 'auth/unauthorized-domain') {
-            showError("This domain is not authorized. Add 'alfredakwetey.me' to Firebase Authorized Domains.");
+            showError("This domain is not authorized in Firebase Console Settings.");
         } else {
             showError(error.message);
         }

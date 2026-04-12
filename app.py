@@ -83,7 +83,8 @@ def create_app(config_name=os.getenv('FLASK_CONFIG', 'development')):
             'https://cdnjs.cloudflare.com'
         ]
     }
-    Talisman(app, content_security_policy=csp, force_https=(not app.config['DEBUG']))
+    # Talisman disabled temporarily to prevent Cross-Origin-Opener-Policy blocks on Firebase Popups
+    # Talisman(app, content_security_policy=csp, force_https=(not app.config['DEBUG']))
 
     # CSRF Protection
     csrf = CSRFProtect(app)

@@ -1,12 +1,12 @@
 # Alfred University Admission Checker 🎓
 
-A professional full-stack web application designed for students and administrators to check university admission eligibility in Ghana based on WASSCE results. This system supports OCR result extraction, intelligent grade validation, and social authentication with Firebase.
+A professional full-stack web application designed for students and administrators to check university admission eligibility in Ghana based on WASSCE results. This system supports manual grade entry, intelligent grade validation, and social authentication with Firebase.
 
 ![Dashboard Preview](https://via.placeholder.com/1200x630.png?text=Alfred+University+Admission+Checker)
 
 ## ✨ Features
 
-- **Double Entry System**: Upload a result slip (PDF/JPG/PNG) for automatic OCR extraction or use the manual entry form.
+- **Manual Grade Entry**: Enter your WASSCE grades manually using our intuitive selection form.
 - **Firebase Authentication**: Secure registration and login using Email/Password or **Sign in with Google**.
 - **Real-time Eligibility Matching**: Checks results against 16+ universities and 50+ programs instantly.
 - **My Admission History**: Persistent tracking of all previous admission checks for authenticated users.
@@ -38,7 +38,6 @@ A professional full-stack web application designed for students and administrato
 - **Backend**: Python 3.8+, Flask, Flask-Login, Flask-SQLAlchemy (SQLite)
 - **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6+), Bootstrap 5
 - **Auth**: Firebase Authentication (Email/Password, Google OAuth)
-- **OCR**: EasyOCR / Tesseract
 - **Database**: SQLite (Production-ready migrations structure)
 
 ## 📁 Repository Structure
@@ -53,10 +52,6 @@ A professional full-stack web application designed for students and administrato
 ├── data/            # University & Program JSON Data
 └── run.py           # Production Server Entry
 ```
-
-> Note: University programs and cutoff points are loaded from `data/universities_data.json`. This dataset is the app's source of truth, but should be updated manually from official university admissions websites for the most accurate results.
-> 
-> Official current cutoff values were partially verified against the University of Ghana admissions page. The dataset still needs full validation for other Ghanaian universities and programs.
 
 ## 🔒 Firebase Configuration
 

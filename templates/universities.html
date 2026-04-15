@@ -49,13 +49,13 @@
                     </h2>
                     <div id="collapse{{ university.id }}" class="accordion-collapse collapse" aria-labelledby="heading{{ university.id }}" data-bs-parent="#universitiesAccordion">
                         <div class="accordion-body">
-                            <p class="mb-2"><strong>Abbreviation:</strong> {{ university.abbreviation or 'N/A' }}</p>
+                            <p class="mb-2"><strong>Abbreviation:</strong> {{ university.abbreviation or '' }}</p>
                             <p class="mb-2"><strong>Description:</strong> {{ university.description or 'No description available.' }}</p>
                             <p class="mb-2"><strong>Website:</strong>
                                 {% if university.website %}
                                     <a href="https://{{ university.website | replace('https://', '') | replace('http://', '') }}" target="_blank">{{ university.website }}</a>
                                 {% else %}
-                                    N/A
+                                    <span class="text-muted">Not available</span>
                                 {% endif %}
                             </p>
                             <p class="mb-3"><strong>Programs:</strong> {{ university.programs | length }}</p>
@@ -80,7 +80,7 @@
                                             </td>
                                             <td>{{ program.category or 'General' }}</td>
                                             <td>{{ program.required_core_subjects | join(', ') }}</td>
-                                            <td>{{ program.required_electives | join(', ') if program.required_electives else 'N/A' }}</td>
+                                            <td>{{ program.required_electives | join(', ') if program.required_electives else '' }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>

@@ -25,6 +25,104 @@ def index():
 @main_bp.route('/manual-entry', methods=['GET', 'POST'])
 def manual_entry():
     """Manual grade entry form"""
+    return render_template('manual-entry.html')
+
+
+# ==================== UPLOAD RESULT ====================
+@main_bp.route('/upload-result', methods=['GET', 'POST'])
+def upload_result():
+    """Upload result slip for automatic grade extraction"""
+    return render_template('upload-result.html')
+
+
+# ==================== EXTRACT GRADES API ====================
+@main_bp.route('/api/extract-grades', methods=['POST'])
+def extract_grades():
+    """Extract grades from uploaded result slip image"""
+    if 'image' not in request.files:
+        return jsonify({'success': False, 'error': 'No image uploaded'}), 400
+    
+    file = request.files['image']
+    if file.filename == '':
+        return jsonify({'success': False, 'error': 'No file selected'}), 400
+    
+    try:
+        image_data = file.read()
+        
+        extracted = analyze_result_image(image_data, file.filename)
+        
+        return jsonify({
+            'success': True,
+            'grades': extracted
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+def analyze_result_image(image_data, filename):
+    """Analyze result slip image and extract grades"""
+    import base64
+    from io import BytesIO
+    
+    image_b64 = base64.b64encode(image_data).decode('utf-8')
+    
+    prompt = """Analyze this WASSCE result slip image and extract the following information:
+1. Student name
+2. For each core subject (English Language, Core Mathematics, Integrated Science, Social Studies), extract the grade
+3. For each elective subject, extract the subject name and grade
+
+Return a JSON with this structure:
+{
+    "name": "student name",
+    "core_subjects": {"English Language": "B2", "Core Mathematics": "C4", ...},
+    "electives": {"Physics": "B2", "Chemistry": "C4", ...}
+}
+
+Only include subjects that have passing grades (A1, B2, B3, C4, C5, C6).
+If you cannot read the image clearly, still try to identify and extract any visible grades."""
+
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+        
+        message = client.messages.create(
+            model="claude-3-haiku-20240307",
+            max_tokens=1024,
+            messages=[
+                {
+                    "role": "user",
+                    "type": "image",
+                    "source": {
+                        "type": "base64",
+                        "media_type": "image/jpeg" if filename.lower().endswith(('.jpg', '.jpeg')) else "image/png",
+                        "data": image_b64
+                    }
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+        
+        import re
+        json_match = re.search(r'\{[\s\S]*\}', message.content[0].text)
+        if json_match:
+            return json.loads(json_match.group())
+        else:
+            raise Exception("Could not parse grades from response")
+    except Exception as e:
+        return {
+            "name": "",
+            "core_subjects": {
+                "English Language": "",
+                "Core Mathematics": "",
+                "Integrated Science": "",
+                "Social Studies": ""
+            },
+            "electives": {},
+            "error": str(e)
+        }
     if request.method == 'POST':
         data = request.get_json()
         

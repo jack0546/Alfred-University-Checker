@@ -15,9 +15,14 @@
                             Alfred University Admission Checker
                         </h1>
                         <p class="lead text-secondary mb-4">Discover which universities and programs you're eligible for with your WASSCE results. Fast, modern, and built for Ghanaian applicants.</p>
-                        <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
-                            <i class="fas fa-edit me-2"></i> Start Manual Entry
-                        </a>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                                <i class="fas fa-edit me-2"></i> Start Manual Entry
+                            </a>
+                            <a href="{{ url_for('main.upload_result') }}" class="btn btn-outline-primary btn-lg px-5 py-3 shadow-sm">
+                                <i class="fas fa-camera me-2"></i> Upload Result Slip
+                            </a>
+                        </div>
                     </div>
                     <div class="col-lg-5 text-lg-end">
                         <div class="hero-badge d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm" style="width: 120px; height: 120px;">

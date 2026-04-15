@@ -25,6 +25,9 @@ class Config:
     SESSION_COOKIE_SAMESITE = 'Lax'
     PERMANENT_SESSION_LIFETIME = 3600 # 1 hour
     
+    # Anthropic API for image analysis
+    ANTHROPIC_API_KEY = os.environ.get('ANTHROPIC_API_KEY', '')
+    
     # Upload settings
     if os.environ.get('VERCEL'):
         UPLOAD_FOLDER = '/tmp/uploads'

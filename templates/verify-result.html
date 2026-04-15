@@ -91,25 +91,16 @@ const passingGrades = ['A1', 'B2', 'B3', 'C4', 'C5', 'C6'];
 function loadVerificationData() {
     let data;
     
-    // Try to get data from manual entry
+    // Get data from manual entry
     const manualData = sessionStorage.getItem('manualEntryData');
     if (manualData) {
         data = JSON.parse(manualData);
-    } else {
-        // Try to get data from OCR
-        const ocrData = sessionStorage.getItem('extractedSubjects');
-        if (ocrData) {
-            data = {
-                extractedSubjects: JSON.parse(ocrData),
-                filepath: sessionStorage.getItem('filepath')
-            };
-        }
     }
     
     if (!data) {
         document.getElementById('validationMessages').innerHTML = `
             <div class="alert alert-danger">
-                <i class="fas fa-exclamation-circle"></i> No data found. Please upload or enter your results first.
+                <i class="fas fa-exclamation-circle"></i> No data found. Please enter your results first.
             </div>
         `;
         return;

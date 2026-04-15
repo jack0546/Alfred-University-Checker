@@ -60,57 +60,36 @@ def extract_grades():
 
 
 def analyze_result_image(image_data, filename):
-    """Analyze result slip image and extract grades"""
+    """Analyze result slip image and extract grades using OCR"""
     import base64
-    from io import BytesIO
     
-    image_b64 = base64.b64encode(image_data).decode('utf-8')
+    api_key = Config.OCR_SPACE_API_KEY or 'helloworld'
     
-    prompt = """Analyze this WASSCE result slip image and extract the following information:
-1. Student name
-2. For each core subject (English Language, Core Mathematics, Integrated Science, Social Studies), extract the grade
-3. For each elective subject, extract the subject name and grade
-
-Return a JSON with this structure:
-{
-    "name": "student name",
-    "core_subjects": {"English Language": "B2", "Core Mathematics": "C4", ...},
-    "electives": {"Physics": "B2", "Chemistry": "C4", ...}
-}
-
-Only include subjects that have passing grades (A1, B2, B3, C4, C5, C6).
-If you cannot read the image clearly, still try to identify and extract any visible grades."""
-
     try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=Config.ANTHROPIC_API_KEY)
+        import requests
         
-        message = client.messages.create(
-            model="claude-3-haiku-20240307",
-            max_tokens=1024,
-            messages=[
-                {
-                    "role": "user",
-                    "type": "image",
-                    "source": {
-                        "type": "base64",
-                        "media_type": "image/jpeg" if filename.lower().endswith(('.jpg', '.jpeg')) else "image/png",
-                        "data": image_b64
-                    }
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ]
+        image_b64 = base64.b64encode(image_data).decode('utf-8')
+        
+        response = requests.post(
+            'https://api.ocr.space/parse/image',
+            data={
+                'apikey': api_key,
+                'language': 'eng',
+                'isOverlayRequired': 'false',
+                'detectOrientation': 'true',
+                'scale': 'true',
+                'OCREngine': '2'
+            },
+            files={'file': (filename, image_data)}
         )
         
-        import re
-        json_match = re.search(r'\{[\s\S]*\}', message.content[0].text)
-        if json_match:
-            return json.loads(json_match.group())
+        result = response.json()
+        
+        if result.get('ParsedResults'):
+            text = result['ParsedResults'][0].get('ParsedText', '')
+            return parse_grade_text(text)
         else:
-            raise Exception("Could not parse grades from response")
+            raise Exception("Could not extract text from image")
     except Exception as e:
         return {
             "name": "",
@@ -123,6 +102,75 @@ If you cannot read the image clearly, still try to identify and extract any visi
             "electives": {},
             "error": str(e)
         }
+
+
+def parse_grade_text(text):
+    """Parse extracted text to find grades"""
+    import re
+    
+    text = text.upper()
+    
+    grades_found = {}
+    
+    grade_pattern = r'([A-Z][A-Z\s]+?)\s*[:\-\.]?\s*([A-C][0-9]|D7|E8|F9)'
+    
+    subject_mapping = {
+        'ENGLISH': 'English Language',
+        'MATHEMATICS': 'Core Mathematics',
+        'MATH': 'Core Mathematics',
+        'INTEGRATED SCIENCE': 'Integrated Science',
+        'SCIENCE': 'Integrated Science',
+        'SOCIAL': 'Social Studies',
+        'SOCIAL STUDIES': 'Social Studies',
+        'PHYSICS': 'Physics',
+        'CHEMISTRY': 'Chemistry',
+        'BIOLOGY': 'Biology',
+        'ELECTIVE MATH': 'Elective Mathematics',
+        'ECONOMICS': 'Economics',
+        'ACCOUNTING': 'Accounting',
+        'BUSINESS': 'Business Management',
+        'LITERATURE': 'Literature in English',
+        'GEOGRAPHY': 'Geography',
+        'HISTORY': 'History',
+        'FRENCH': 'French'
+    }
+    
+    valid_grades = ['A1', 'B2', 'B3', 'C4', 'C5', 'C6']
+    
+    matches = re.findall(grade_pattern, text)
+    
+    for subject, grade in matches:
+        subject = subject.strip()
+        grade = grade.strip()
+        
+        if grade in valid_grades:
+            for key, mapped in subject_mapping.items():
+                if key in subject:
+                    if 'CORE' not in subject.upper() and mapped in grades_found:
+                        continue
+                    if mapped not in grades_found:
+                        grades_found[mapped] = grade
+                    break
+    
+    core_subjects = {
+        "English Language": grades_found.get("English Language", ""),
+        "Core Mathematics": grades_found.get("Core Mathematics", ""),
+        "Integrated Science": grades_found.get("Integrated Science", ""),
+        "Social Studies": grades_found.get("Social Studies", "")
+    }
+    
+    electives = {}
+    for key in ["Physics", "Chemistry", "Biology", "Elective Mathematics", 
+                "Economics", "Accounting", "Business Management", "Literature in English",
+                "Geography", "History", "French"]:
+        if key in grades_found:
+            electives[key] = grades_found[key]
+    
+    return {
+        "name": "",
+        "core_subjects": core_subjects,
+        "electives": electives
+    }
     if request.method == 'POST':
         data = request.get_json()
         

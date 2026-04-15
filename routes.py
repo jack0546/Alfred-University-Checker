@@ -25,7 +25,7 @@ def index():
 @main_bp.route('/manual-entry', methods=['GET', 'POST'])
 def manual_entry():
     """Manual grade entry form"""
-    return render_template('manual-entry.html')
+    return render_template('manual-entry.html', electives=Config.ELECTIVES)
 
 
 # ==================== VERIFY RESULT ====================

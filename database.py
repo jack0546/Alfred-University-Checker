@@ -54,15 +54,16 @@ def load_universities_data():
                     name=prog_data['name'],
                     category=prog_data.get('category'),
                     description=prog_data.get('description'),
-                    maximum_aggregate=prog_data['maximum_aggregate'],
-                    minimum_aggregate=prog_data.get('minimum_aggregate'),
+                    maximum_aggregate=prog_data.get('maximum_aggregate', 30),
+                    minimum_aggregate=prog_data.get('minimum_aggregate', 6),
                     required_core_subjects=prog_data.get('required_core_subjects', []),
                     required_electives=prog_data.get('required_electives'),
-                    course_categories=prog_data.get('course_categories'),
+                    course_categories=prog_data.get('course_categories', []),
                     academic_year=prog_data.get('academic_year', 2026),
                     popularity_level=prog_data.get('popularity_level', 'medium'),
                     value_level=prog_data.get('value_level', 'medium'),
-                    is_desired_program=prog_data.get('is_desired_program', False)
+                    is_desired_program=prog_data.get('is_desired_program', False),
+                    minimum_credit_passes=prog_data.get('minimum_credit_passes', 3)
                 )
                 db.session.add(program)
     

@@ -67,9 +67,6 @@
                                         <tr>
                                             <th>Program</th>
                                             <th>Category</th>
-                                            <th>Max Aggregate</th>
-                                            <th>Min Aggregate</th>
-                                            <th>Academic Year</th>
                                             <th>Required Core Subjects</th>
                                             <th>Required Electives</th>
                                         </tr>
@@ -82,9 +79,6 @@
                                                 <div class="text-muted small mt-1">{{ program.description or 'No description available.' }}</div>
                                             </td>
                                             <td>{{ program.category or 'General' }}</td>
-                                            <td>{{ program.maximum_aggregate }}</td>
-                                            <td>{{ program.minimum_aggregate if program.minimum_aggregate is not none else 'N/A' }}</td>
-                                            <td>{{ program.academic_year or 'N/A' }}</td>
                                             <td>{{ program.required_core_subjects | join(', ') }}</td>
                                             <td>{{ program.required_electives | join(', ') if program.required_electives else 'N/A' }}</td>
                                         </tr>

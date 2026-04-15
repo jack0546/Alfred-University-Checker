@@ -62,7 +62,6 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>Program</th>
-                                        <th>Req. Aggregate</th>
                                         <th>Status</th>
                                         <th>Reason</th>
                                     </tr>
@@ -71,7 +70,6 @@
                                     {% for result in uni_data.programs %}
                                     <tr>
                                         <td>{{ result.program.name }}</td>
-                                        <td>≤ {{ result.program.maximum_aggregate }}</td>
                                         <td>
                                             {% if result.status == 'qualified' %}
                                                 <span class="badge bg-success">Qualified</span>
@@ -133,7 +131,6 @@
                                 <tr>
                                     <th>University</th>
                                     <th>Program</th>
-                                    <th>Requirement</th>
                                     <th>Your Aggregate</th>
                                     <th>Status</th>
                                     <th></th>
@@ -147,7 +144,6 @@
                                         <div class="fw-bold">{{ result.program.name }}</div>
                                         <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
                                     </td>
-                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
                                     <td><strong>{{ student.aggregate }}</strong></td>
                                     <td><span class="badge bg-success">Qualified</span></td>
                                     <td>
@@ -175,7 +171,6 @@
                                 <tr>
                                     <th>University</th>
                                     <th>Program</th>
-                                    <th>Requirement</th>
                                     <th>Your Aggregate</th>
                                     <th>Status</th>
                                     <th></th>
@@ -189,7 +184,6 @@
                                         <div class="fw-bold">{{ result.program.name }}</div>
                                         <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
                                     </td>
-                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
                                     <td><strong>{{ student.aggregate }}</strong></td>
                                     <td><span class="badge bg-success">Qualified</span></td>
                                     <td>
@@ -224,11 +218,10 @@
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover">
-                            <thead class="table-light">open in this work
+                            <thead class="table-light">
                                 <tr>
                                     <th>University</th>
                                     <th>Program</th>
-                                    <th>Requirement</th>
                                     <th>Your Aggregate</th>
                                     <th>Status</th>
                                     <th></th>
@@ -242,7 +235,6 @@
                                         <div class="fw-bold">{{ result.program.name }}</div>
                                         <div class="small text-muted text-truncate" style="max-width: 300px;">{{ result.program.description or 'No description available.' }}</div>
                                     </td>
-                                    <td>≤ {{ result.program.maximum_aggregate }}</td>
                                     <td><strong>{{ student.aggregate }}</strong></td>
                                     <td><span class="badge bg-warning">Borderline</span></td>
                                     <td>

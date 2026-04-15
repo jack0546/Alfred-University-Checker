@@ -28,38 +28,7 @@ def manual_entry():
     return render_template('manual-entry.html')
 
 
-# ==================== UPLOAD RESULT ====================
-@main_bp.route('/upload-result', methods=['GET', 'POST'])
-def upload_result():
-    """Upload result slip for automatic grade extraction"""
-    return render_template('upload-result.html')
-
-
-# ==================== EXTRACT GRADES API ====================
-@main_bp.route('/api/extract-grades', methods=['POST'])
-def extract_grades():
-    """Extract grades from uploaded result slip image"""
-    if 'image' not in request.files:
-        return jsonify({'success': False, 'error': 'No image uploaded'}), 400
-    
-    file = request.files['image']
-    if file.filename == '':
-        return jsonify({'success': False, 'error': 'No file selected'}), 400
-    
-    try:
-        image_data = file.read()
-        
-        extracted = analyze_result_image(image_data, file.filename)
-        
-        return jsonify({
-            'success': True,
-            'grades': extracted
-        })
-    except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
-
-
-def analyze_result_image(image_data, filename):
+# ==================== VERIFY RESULT ====================
     """Analyze result slip image and extract grades using OCR"""
     import base64
     

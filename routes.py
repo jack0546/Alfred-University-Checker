@@ -3,12 +3,13 @@ Flask routes for Ghana Admission Checker
 """
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from models import db, Student, University, Program, AdmissionResult, User
+from models import db, Student, University, Program, AdmissionResult, User, CutoffPoint
 from utils import GradeValidator, AdmissionMatcher
 from config import Config
 import os
 import requests
 import json
+from datetime import datetime
 
 # Create blueprint
 main_bp = Blueprint('main', __name__)
@@ -429,6 +430,209 @@ def api_admission_status(student_id):
         'borderline': borderline,
         'total_programs': len(results)
     })
+
+# ==================== CUTOFF MANAGEMENT ====================
+@main_bp.route('/api/cutoff-points', methods=['GET'])
+def get_cutoff_points():
+    """Get cutoff points for a specific year"""
+    current_year = datetime.utcnow().year
+    academic_year = request.args.get('year', current_year, type=int)
+    university_id = request.args.get('university_id', type=int)
+    timestamp = request.args.get('timestamp')  # For real-time updates
+    
+    query = Program.query.filter_by(academic_year=academic_year)
+    
+    if university_id:
+        query = query.filter_by(university_id=university_id)
+    
+    # If timestamp provided, only return programs updated after that timestamp
+    if timestamp:
+        try:
+            since_time = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+            query = query.filter(Program.last_updated > since_time)
+        except ValueError:
+            pass  # Invalid timestamp, return all
+    
+    programs = query.all()
+    
+    return jsonify({
+        'success': True,
+        'academic_year': academic_year,
+        'programs': [p.to_dict() for p in programs],
+        'has_updates': len(programs) > 0 if timestamp else False
+    })
+
+@main_bp.route('/api/cutoff-points/<int:program_id>', methods=['GET'])
+def get_program_cutoff_history(program_id):
+    """Get cutoff history for a program"""
+    program = Program.query.get(program_id)
+    if not program:
+        return jsonify({'success': False, 'error': 'Program not found'}), 404
+    
+    history = CutoffPoint.query.filter_by(program_id=program_id).order_by(CutoffPoint.update_date.desc()).all()
+    
+    return jsonify({
+        'success': True,
+        'program': program.to_dict(),
+        'history': [h.to_dict() for h in history]
+    })
+
+@main_bp.route('/api/cutoff-points/<int:program_id>/update', methods=['POST'])
+def update_cutoff_point(program_id):
+    """Update cutoff point for a program (Admin only)"""
+    # In production, add proper admin authentication
+    program = Program.query.get(program_id)
+    if not program:
+        return jsonify({'success': False, 'error': 'Program not found'}), 404
+    
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'error': 'No data provided'}), 400
+    
+    new_aggregate = data.get('maximum_aggregate')
+    academic_year = data.get('academic_year', 2026)
+    change_reason = data.get('change_reason', '')
+    notes = data.get('notes', '')
+    
+    if new_aggregate is None:
+        return jsonify({'success': False, 'error': 'maximum_aggregate is required'}), 400
+    
+    try:
+        new_aggregate = int(new_aggregate)
+        if new_aggregate < 12 or new_aggregate > 36:
+            return jsonify({'success': False, 'error': 'Aggregate must be between 12 and 36'}), 400
+    except ValueError:
+        return jsonify({'success': False, 'error': 'Invalid aggregate value'}), 400
+    
+    # Create audit record
+    cutoff_record = CutoffPoint(
+        program_id=program_id,
+        academic_year=academic_year,
+        maximum_aggregate=new_aggregate,
+        minimum_aggregate=data.get('minimum_aggregate'),
+        previous_maximum_aggregate=program.maximum_aggregate,
+        change_reason=change_reason,
+        updated_by=current_user.email if current_user.is_authenticated else 'system',
+        notes=notes,
+        is_official=data.get('is_official', False)
+    )
+    
+    # Update program
+    program.maximum_aggregate = new_aggregate
+    if data.get('minimum_aggregate'):
+        program.minimum_aggregate = data.get('minimum_aggregate')
+    program.academic_year = academic_year
+    program.last_updated = datetime.utcnow()
+    
+    db.session.add(cutoff_record)
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'message': f'Cutoff point updated to {new_aggregate}',
+        'program': program.to_dict(),
+        'record': cutoff_record.to_dict()
+    })
+
+@main_bp.route('/api/bulk-update-cutoffs', methods=['POST'])
+def bulk_update_cutoffs():
+    """Bulk update cutoff points for multiple programs"""
+    # In production, add proper admin authentication
+    data = request.get_json()
+    if not data:
+        return jsonify({'success': False, 'error': 'No data provided'}), 400
+    
+    updates = data.get('updates', [])
+    batch_notes = data.get('batch_notes', '')
+    academic_year = data.get('academic_year', 2026)
+    
+    if not updates:
+        return jsonify({'success': False, 'error': 'No updates provided'}), 400
+    
+    successful = []
+    failed = []
+    
+    for update in updates:
+        try:
+            program_id = update.get('program_id')
+            new_aggregate = int(update.get('maximum_aggregate'))
+            
+            program = Program.query.get(program_id)
+            if not program:
+                failed.append({'program_id': program_id, 'error': 'Program not found'})
+                continue
+            
+            if new_aggregate < 12 or new_aggregate > 36:
+                failed.append({'program_id': program_id, 'error': 'Invalid aggregate'})
+                continue
+            
+            cutoff_record = CutoffPoint(
+                program_id=program_id,
+                academic_year=academic_year,
+                maximum_aggregate=new_aggregate,
+                previous_maximum_aggregate=program.maximum_aggregate,
+                change_reason=update.get('change_reason', f'Bulk update - {batch_notes}'),
+                updated_by=current_user.email if current_user.is_authenticated else 'system',
+                is_official=True
+            )
+            
+            program.maximum_aggregate = new_aggregate
+            program.academic_year = academic_year
+            program.last_updated = datetime.utcnow()
+            
+            db.session.add(cutoff_record)
+            successful.append(program_id)
+        except Exception as e:
+            failed.append({'program_id': update.get('program_id'), 'error': str(e)})
+    
+    db.session.commit()
+    
+    return jsonify({
+        'success': True,
+        'successful': len(successful),
+        'failed': len(failed),
+        'details': {
+            'successful_ids': successful,
+            'failed': failed
+        }
+    })
+
+@main_bp.route('/api/yearly-comparison/<int:university_id>', methods=['GET'])
+def get_yearly_cutoff_comparison(university_id):
+    """Compare cutoff points across years for a university"""
+    from sqlalchemy import func
+    
+    university = University.query.get(university_id)
+    if not university:
+        return jsonify({'success': False, 'error': 'University not found'}), 404
+    
+    # Get all programs for the university
+    programs = Program.query.filter_by(university_id=university_id).all()
+    
+    comparison = []
+    for program in programs:
+        history = CutoffPoint.query.filter_by(program_id=program.id).order_by(CutoffPoint.academic_year.desc()).all()
+        
+        comparison.append({
+            'program_id': program.id,
+            'program_name': program.name,
+            'current_cutoff': program.maximum_aggregate,
+            'history': [{'year': h.academic_year, 'aggregate': h.maximum_aggregate, 'date': h.update_date.isoformat()} for h in history]
+        })
+    
+    return jsonify({
+        'success': True,
+        'university': university.to_dict(),
+        'programs': comparison
+    })
+
+# ==================== ADMIN ====================
+@main_bp.route('/admin/cutoffs')
+@login_required
+def admin_cutoffs():
+    """Admin interface for managing cutoff points"""
+    # In production, add proper admin role check
+    return render_template('admin-cutoffs.html')
 
 # ==================== SEARCH ====================
 @main_bp.route('/search')

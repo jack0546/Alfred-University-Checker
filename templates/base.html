@@ -24,6 +24,10 @@
 
     <!-- CSRF Token for AJAX -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Vanta.js Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r121/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
 </head>
 
 <body>
@@ -85,20 +89,23 @@
 
     <!-- Main content -->
     <main class="py-4">
-        <div class="container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
-                role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-            {% endfor %}
-            {% endif %}
-            {% endwith %}
+        <div id="vanta-wrapper" class="vanta-wrapper-main">
+            <div id="vanta-bg"></div>
+            <div class="container position-relative">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                {% for category, message in messages %}
+                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show"
+                    role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
 
-            {% block content %}{% endblock %}
+                {% block content %}{% endblock %}
+            </div>
         </div>
     </main>
 
@@ -123,8 +130,9 @@
                 </div>
                 <div class="col-md-4 mb-3">
                     <h5 class="mb-2">Contact & Support</h5>
-                    <p class="text-muted small mb-1">Email: akweteyalfred3@gmail.</p>
-                    <p class="text-muted small">Phone: +233 532340875</p>
+                    <p class="text-muted small mb-1">Email: <a href="mailto:akweteyalfred3@gmail.com" class="text-decoration-none">akweteyalfred3@gmail.com</a></p>
+                    <p class="text-muted small mb-1">Phone: <a href="tel:+233532340875" class="text-decoration-none">+233 532 340 875</a></p>
+                    <p class="text-muted small mb-0">Support hours: Mon - Fri, 9:00 AM - 5:00 PM</p>
                 </div>
             </div>
             <hr class="my-3">
@@ -199,6 +207,29 @@
     </script>
 
     {% block extra_js %}{% endblock %}
+    
+    <!-- Vanta Background Initialization for All Pages -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof VANTA !== 'undefined' && document.getElementById('vanta-bg')) {
+                VANTA.FOG({
+                    el: '#vanta-bg',
+                    mouseControls: false,
+                    touchControls: false,
+                    gyroControls: false,
+                    minHeight: 200.00,
+                    minWidth: 200.00,
+                    highlightColor: 0x2563eb,
+                    midtoneColor: 0x3b82f6,
+                    lowlightColor: 0x93c5fd,
+                    baseColor: 0xf8fafc,
+                    blurFactor: 0.65,
+                    speed: 1.25,
+                    zoom: 1.05
+                });
+            }
+        });
+    </script>
 </body>
 
-</html>
+</html>  

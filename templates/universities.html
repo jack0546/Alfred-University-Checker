@@ -11,6 +11,30 @@
         </div>
 
         {% if universities %}
+            <!-- Search Bar -->
+            <div class="mb-4">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="fas fa-search text-primary"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" id="universitySearchInput" 
+                           placeholder="Search universities by name, city, abbreviation, or program..." 
+                           autocomplete="off">
+                    <button class="btn btn-outline-secondary" type="button" id="clearSearchBtn" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <small class="text-muted d-block mt-2">
+                    Showing <span id="resultCount">{{ universities | length }}</span> of {{ universities | length }} universities
+                </small>
+            </div>
+
+            <!-- No Results Message -->
+            <div class="alert alert-warning d-none" id="noResultsAlert" role="alert">
+                <i class="fas fa-search me-2"></i>
+                <strong>No universities found</strong> matching your search criteria. Try different keywords.
+            </div>
+
             <div class="accordion" id="universitiesAccordion">
                 {% for university in universities %}
                 <div class="accordion-item mb-3">
@@ -44,16 +68,25 @@
                                             <th>Program</th>
                                             <th>Category</th>
                                             <th>Max Aggregate</th>
+                                            <th>Min Aggregate</th>
+                                            <th>Academic Year</th>
                                             <th>Required Core Subjects</th>
+                                            <th>Required Electives</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for program in university.programs %}
                                         <tr>
-                                            <td>{{ program.name }}</td>
+                                            <td>
+                                                <strong>{{ program.name }}</strong>
+                                                <div class="text-muted small mt-1">{{ program.description or 'No description available.' }}</div>
+                                            </td>
                                             <td>{{ program.category or 'General' }}</td>
                                             <td>{{ program.maximum_aggregate }}</td>
+                                            <td>{{ program.minimum_aggregate if program.minimum_aggregate is not none else 'N/A' }}</td>
+                                            <td>{{ program.academic_year or 'N/A' }}</td>
                                             <td>{{ program.required_core_subjects | join(', ') }}</td>
+                                            <td>{{ program.required_electives | join(', ') if program.required_electives else 'N/A' }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
@@ -73,3 +106,90 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('universitySearchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    const accordion = document.getElementById('universitiesAccordion');
+    const noResultsAlert = document.getElementById('noResultsAlert');
+    const resultCount = document.getElementById('resultCount');
+    
+    if (!searchInput || !accordion) return;
+    
+    // Get all university accordion items
+    function getAllUniversityItems() {
+        return Array.from(accordion.querySelectorAll('.accordion-item'));
+    }
+    
+    // Filter universities based on search query
+    function filterUniversities(query) {
+        const items = getAllUniversityItems();
+        const lowerQuery = query.toLowerCase().trim();
+        let visibleCount = 0;
+        
+        items.forEach(item => {
+            // Get text content from the item
+            const universityName = item.querySelector('.accordion-button strong')?.textContent.toLowerCase() || '';
+            const badge = item.querySelector('.badge')?.textContent.toLowerCase() || '';
+            const cityText = item.querySelector('.text-muted')?.textContent.toLowerCase() || '';
+            
+            // Get abbreviation and other details
+            const bodyText = item.querySelector('.accordion-body')?.textContent.toLowerCase() || '';
+            
+            // Create searchable text from all relevant fields
+            const searchableText = `${universityName} ${badge} ${cityText} ${bodyText}`;
+            
+            // Check if query matches
+            const matches = lowerQuery === '' || searchableText.includes(lowerQuery);
+            
+            if (matches) {
+                item.style.display = '';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Update result counter
+        resultCount.textContent = visibleCount;
+        
+        // Show/hide no results message
+        if (visibleCount === 0 && lowerQuery !== '') {
+            noResultsAlert.classList.remove('d-none');
+        } else {
+            noResultsAlert.classList.add('d-none');
+        }
+    }
+    
+    // Event listener for search input with debounce
+    let searchTimeout;
+    searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            filterUniversities(e.target.value);
+        }, 150);
+    });
+    
+    // Allow Enter key to trigger search
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            filterUniversities(searchInput.value);
+        }
+    });
+    
+    // Clear button functionality
+    clearBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        filterUniversities('');
+        searchInput.focus();
+    });
+    
+    // Focus search bar on page load
+    searchInput.focus();
+});
+</script>
+{% endblock %}
+

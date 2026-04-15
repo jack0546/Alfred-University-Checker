@@ -48,9 +48,9 @@
                     <h5 class="mb-3"><i class="fas fa-plus-circle"></i> Elective Subjects (Choose 3)</h5>
                     <div class="mb-4">
                         <small class="form-text text-muted d-block mb-3">
-                            <i class="fas fa-info-circle"></i> Select exactly 3 elective subjects
+                            <i class="fas fa-info-circle"></i> Choose one subject and grade on each elective tab. Electives cannot repeat.
                         </small>
-                        <div id="electivesContainer" class="row">
+                        <div id="electivesContainer">
                             <!-- Electives will be dynamically added -->
                         </div>
                     </div>
@@ -106,15 +106,43 @@ const coreSubjectsByCategory = {
     'Technical/Vocational': ['English Language', 'Core Mathematics', 'Social Studies']
 };
 
-const electiveOptions = [
-    'Additional Mathematics', 'Physics', 'Chemistry', 'Biology',
-    'Economics', 'Accounting', 'Business Management', 'Civic Education',
-    'History', 'Geography', 'Literature in English', 'French',
-    'Clothing and Textiles', 'Food and Nutrition', 'Visual Arts',
-    'Music', 'Information and Communication Technology', 'General Knowledge in ICT'
-];
+const electiveOptions = {{ electives|tojson | safe }};
+
+const categoryElectives = {
+    'Science': [
+        'Additional Mathematics', 'Elective Mathematics', 'Physics', 'Chemistry', 'Biology',
+        'Agricultural Science', 'Information and Communication Technology', 'General Knowledge in ICT',
+        'Economics'
+    ],
+    'General Arts': [
+        'Literature in English', 'History', 'Geography', 'French', 'Arabic',
+        'Music', 'Visual Arts', 'General Knowledge in Art', 'Economics', 'Information and Communication Technology'
+    ],
+    'Business': [
+        'Economics', 'Accounting', 'Business Management', 'Costing',
+        'Information and Communication Technology', 'General Knowledge in ICT', 'Civic Education',
+        'Elective Mathematics'
+    ],
+    'Visual Arts': [
+        'Visual Arts', 'Music', 'Design and Technology', 'Technical Drawing',
+        'Clothing and Textiles', 'Food and Nutrition', 'Home Management', 'General Knowledge in Art'
+    ],
+    'Home Economics': [
+        'Home Management', 'Food and Nutrition', 'Clothing and Textiles',
+        'Economics', 'Business Management', 'Agricultural Science', 'Information and Communication Technology'
+    ],
+    'Technical/Vocational': [
+        'Technical Drawing', 'Design and Technology', 'Building Construction',
+        'Auto Mechanics', 'Metal Work', 'Woodwork', 'Electrical Engineering Technology',
+        'Information and Communication Technology', 'General Knowledge in ICT'
+    ]
+};
 
 const validGrades = ['A1', 'B2', 'B3', 'C4', 'C5', 'C6', 'D7', 'E8', 'F9'];
+
+function getElectiveOptions(category) {
+    return categoryElectives[category] || electiveOptions;
+}
 
 function updateCoreSubjects() {
     const category = document.getElementById('category').value;
@@ -122,13 +150,14 @@ function updateCoreSubjects() {
     
     if (!category) {
         container.innerHTML = '<small class="text-muted">Select a category first</small>';
+        updateElectiveTabs();
         return;
     }
     
     const subjects = coreSubjectsByCategory[category];
     let html = '';
     
-    subjects.forEach((subject, index) => {
+    subjects.forEach((subject) => {
         html += `
             <div class="row mb-3">
                 <div class="col-md-8">
@@ -145,54 +174,162 @@ function updateCoreSubjects() {
     });
     
     container.innerHTML = html;
-    updateElectives();
+    updateElectiveTabs();
 }
 
-function updateElectives() {
+function updateElectiveTabs() {
+    const category = document.getElementById('category').value;
     const container = document.getElementById('electivesContainer');
-    let html = '';
-    
-    electiveOptions.forEach((elective, index) => {
-        html += `
-            <div class="col-md-6 mb-3">
-                <div class="form-check">
-                    <input class="form-check-input elective-checkbox" type="checkbox" value="${elective}" 
-                           id="elective_${index}" name="electives" data-subject="${elective}">
-                    <label class="form-check-label" for="elective_${index}">
-                        ${elective}
-                    </label>
+    const options = getElectiveOptions(category);
+    const activeClass = 'active';
+    const showClass = 'show active';
+
+    let html = `
+        <ul class="nav nav-tabs mb-3" id="electiveTabs" role="tablist">
+            ${[1,2,3].map(i => `
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link ${i === 1 ? activeClass : ''}" id="elective-tab-${i}" data-bs-toggle="tab" data-bs-target="#elective-pane-${i}" type="button" role="tab" aria-controls="elective-pane-${i}" aria-selected="${i === 1}">
+                        Elective ${i}
+                    </button>
+                </li>
+            `).join('')}
+        </ul>
+        <div class="tab-content" id="electiveTabsContent">
+            ${[1,2,3].map(i => `
+                <div class="tab-pane fade ${i === 1 ? showClass : ''}" id="elective-pane-${i}" role="tabpanel" aria-labelledby="elective-tab-${i}">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Elective Subject ${i} *</label>
+                            <select class="form-select elective-subject" name="elective_subject" data-index="${i}" required ${category ? '' : 'disabled'}>
+                                <option value="">Select subject</option>
+                                ${options.map(subject => `<option value="${subject}">${subject}</option>`).join('')}
+                            </select>
+                            <div class="invalid-feedback">Duplicate elective selected. Please pick a different subject.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Grade *</label>
+                            <select class="form-select elective-grade" name="elective_grade" data-index="${i}" required disabled>
+                                <option value="">Select grade</option>
+                                ${validGrades.map(g => `<option value="${g}">${g}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <select class="form-select form-select-sm mt-2 d-none" id="grade_${index}" 
-                        name="elective_grade" data-index="${index}">
-                    <option value="">Grade</option>
-                    ${validGrades.map(g => `<option value="${g}">${g}</option>`).join('')}
-                </select>
-            </div>
-        `;
-    });
-    
+            `).join('')}
+        </div>
+    `;
+
     container.innerHTML = html;
-    
-    // Add change listeners to checkboxes
-    document.querySelectorAll('.elective-checkbox').forEach((checkbox, index) => {
-        checkbox.addEventListener('change', function() {
-            const gradeSelect = document.getElementById(`grade_${index}`);
-            gradeSelect.classList.toggle('d-none', !this.checked);
-            if (this.checked) {
-                gradeSelect.required = true;
-            } else {
-                gradeSelect.required = false;
+    attachElectiveListeners();
+}
+
+function attachElectiveListeners() {
+    const subjectSelects = document.querySelectorAll('.elective-subject');
+    const gradeSelects = document.querySelectorAll('.elective-grade');
+
+    subjectSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            const selectedSubject = this.value;
+            const index = this.dataset.index;
+            const gradeSelect = document.querySelector(`.elective-grade[data-index="${index}"]`);
+
+            gradeSelect.disabled = !selectedSubject;
+            if (!selectedSubject) {
                 gradeSelect.value = '';
             }
-            validateElectiveCount();
+            updateElectiveOptions();
         });
+    });
+
+    gradeSelects.forEach(select => {
+        select.addEventListener('change', function() {
+            if (!this.value) {
+                return;
+            }
+        });
+    });
+    highlightDuplicateElectives();
+}
+
+function updateElectiveOptions() {
+    const subjectSelects = Array.from(document.querySelectorAll('.elective-subject'));
+    const selectedSubjects = subjectSelects.map(select => select.value).filter(Boolean);
+    const category = document.getElementById('category').value;
+    const options = getElectiveOptions(category);
+
+    const counts = selectedSubjects.reduce((acc, subject) => {
+        acc[subject] = (acc[subject] || 0) + 1;
+        return acc;
+    }, {});
+
+    // If duplicate subjects are present, clear the later duplicate selections.
+    subjectSelects.forEach((select, idx) => {
+        const value = select.value;
+        if (value && counts[value] > 1) {
+            const firstIndex = subjectSelects.findIndex(s => s.value === value);
+            if (idx !== firstIndex) {
+                select.value = '';
+                const gradeSelect = document.querySelector(`.elective-grade[data-index="${select.dataset.index}"]`);
+                if (gradeSelect) {
+                    gradeSelect.value = '';
+                    gradeSelect.disabled = true;
+                }
+            }
+        }
+    });
+
+    const activeSubjects = subjectSelects.map(select => select.value).filter(Boolean);
+
+    subjectSelects.forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = `
+            <option value="">Select subject</option>
+            ${options.map(subject => {
+                const alreadySelectedInOther = activeSubjects.includes(subject) && currentValue !== subject;
+                if (alreadySelectedInOther) {
+                    return '';
+                }
+                return `<option value="${subject}" ${currentValue === subject ? 'selected' : ''}>${subject}</option>`;
+            }).join('')}
+        `;
+    });
+
+    highlightDuplicateElectives();
+}
+
+function highlightDuplicateElectives() {
+    const selectedSubjects = Array.from(document.querySelectorAll('.elective-subject'))
+        .map(select => select.value)
+        .filter(Boolean);
+    const duplicates = selectedSubjects.filter((value, index, self) => self.indexOf(value) !== index);
+
+    document.querySelectorAll('.elective-subject').forEach(select => {
+        const isDuplicate = select.value && duplicates.includes(select.value);
+        select.classList.toggle('is-invalid', isDuplicate);
+        if (!isDuplicate) {
+            select.classList.remove('is-invalid');
+        }
     });
 }
 
-function validateElectiveCount() {
-    const selected = document.querySelectorAll('.elective-checkbox:checked').length;
-    const remaining = 3 - selected;
-    // You could show a visual indicator here
+function validateElectiveSelection() {
+    const chosen = Array.from(document.querySelectorAll('.elective-subject'))
+        .map(select => select.value)
+        .filter(Boolean);
+    const grades = Array.from(document.querySelectorAll('.elective-grade'))
+        .map(select => select.value)
+        .filter(Boolean);
+
+    if (chosen.length !== 3) {
+        return 'Please select all 3 elective subjects.';
+    }
+    if (new Set(chosen).size !== 3) {
+        return 'Each elective subject must be unique.';
+    }
+    if (grades.length !== 3) {
+        return 'Please choose a grade for each elective subject.';
+    }
+    return null;
 }
 
 document.getElementById('manualEntryForm').addEventListener('submit', function(e) {
@@ -214,28 +351,29 @@ document.getElementById('manualEntryForm').addEventListener('submit', function(e
     });
     
     // Collect electives
-    document.querySelectorAll('.elective-checkbox:checked').forEach(checkbox => {
-        const index = checkbox.id.split('_')[1];
-        const gradeSelect = document.getElementById(`grade_${index}`);
-        if (gradeSelect.value) {
-            formData.electives[checkbox.value] = gradeSelect.value;
+    document.querySelectorAll('.elective-subject').forEach(select => {
+        const index = select.dataset.index;
+        const subject = select.value;
+        const gradeSelect = document.querySelector(`.elective-grade[data-index="${index}"]`);
+        const grade = gradeSelect ? gradeSelect.value : '';
+        if (subject) {
+            formData.electives[subject] = grade;
         }
     });
     
     // Validation
     let errors = [];
-    
+    const electiveError = validateElectiveSelection();
+    if (electiveError) errors.push(electiveError);
     if (!formData.name) errors.push('Full name is required');
     if (!formData.category) errors.push('Course category is required');
     if (Object.keys(formData.core_subjects).length < 3) errors.push('All core subjects must have grades');
-    if (Object.keys(formData.electives).length !== 3) errors.push('Exactly 3 electives must be selected');
     
     if (errors.length > 0) {
         showFormError(errors.join('<br>'));
         return;
     }
     
-    // Store data and redirect to verification
     sessionStorage.setItem('manualEntryData', JSON.stringify(formData));
     window.location.href = '{{ url_for("main.verify_result") }}';
 });
@@ -248,8 +386,13 @@ function showFormError(message) {
 }
 
 // Initialize on load
-document.addEventListener('DOMContentLoaded', function() {
+function initializeForm() {
     updateCoreSubjects();
-});
+    document.getElementById('category').addEventListener('change', updateCoreSubjects);
+}
+
+document.addEventListener('DOMContentLoaded', initializeForm);
+
+
 </script>
 {% endblock %}

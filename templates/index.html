@@ -3,182 +3,204 @@
 {% block title %}Home - Alfred University Admission Checker{% endblock %}
 
 {% block content %}
-<div class="row mb-5">
-    <div class="col-lg-8 offset-lg-2">
-        <!-- Hero Section -->
-        <div class="jumbotron bg-light p-5 rounded shadow-sm">
-            <h1 class="display-4 mb-3">
-                <i class="fas fa-graduation-cap text-primary me-3"></i>
-                Alfred  University Admission Checker
-            </h1>
-            <p class="lead mb-4 fs-5">Discover which universities and programs you're eligible for with your WASSCE results</p>
-            <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-4 py-3">
-                <i class="fas fa-edit me-2"></i> Start Manual Entry
-            </a>
-        </div>
-    </div>
-</div>
-
-<!-- Features -->
-<div class="row mb-5">
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm border-0 bg-white">
-            <div class="card-body text-center p-4">
-                <div class="mb-3">
-                    <i class="fas fa-edit fa-3x text-primary"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">Manual Grade Entry</h5>
-                <p class="card-text text-muted">Enter your WASSCE grades manually using our intuitive and fast selection form.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm border-0 bg-white">
-            <div class="card-body text-center p-4">
-                <div class="mb-3">
-                    <i class="fas fa-brain fa-3x text-success"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">Smart Matching</h5>
-                <p class="card-text text-muted">Our AI-powered system matches your grades against ALL Ghanaian universities and their program requirements.</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card h-100 shadow-sm border-0 bg-white">
-            <div class="card-body text-center p-4">
-                <div class="mb-3">
-                    <i class="fas fa-chart-bar fa-3x text-info"></i>
-                </div>
-                <h5 class="card-title fw-bold mb-3">Instant Results</h5>
-                <p class="card-text text-muted">Get a comprehensive dashboard showing qualified, borderline, and recommended programs instantly.</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- How It Works -->
-<div class="row mb-5">
-    <div class="col-lg-10 offset-lg-1">
-        <h2 class="text-center mb-5 fw-bold">How It Works</h2>
-        <div class="row g-4">
-            <div class="col-md-3 text-center">
-                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                    <span class="fs-4 fw-bold">1</span>
-                </div>
-                <h5 class="fw-bold mb-2">Upload Result</h5>
-                <p class="text-muted small">Upload WASSCE result or enter manually</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                    <span class="fs-4 fw-bold">2</span>
-                </div>
-                <h5 class="fw-bold mb-2">Verify Grades</h5>
-                <p class="text-muted small">Confirm grades are correct</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                    <span class="fs-4 fw-bold">3</span>
-                </div>
-                <h5 class="fw-bold mb-2">Get Matches</h5>
-                <p class="text-muted small">See all matching programs</p>
-            </div>
-            <div class="col-md-3 text-center">
-                <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 70px; height: 70px;">
-                    <span class="fs-4 fw-bold">4</span>
-                </div>
-                <h5 class="fw-bold mb-2">Apply Now</h5>
-                <p class="text-muted small">Apply to your chosen universities</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- WASSCE Grading System -->
-<div class="row mb-5">
-    <div class="col-lg-10 offset-lg-1">
-        <h2 class="text-center mb-4 fw-bold">WASSCE Grading System</h2>
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-4">
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <h5 class="mb-4 text-success">
-                            <i class="fas fa-check-circle me-2"></i>Passing Grades
-                        </h5>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">A1</strong> - Excellent (1 point)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">B2</strong> - Very Good (2 points)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">B3</strong> - Good (3 points)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">C4</strong> - Credit (4 points)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">C5</strong> - Credit (5 points)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-success">C6</strong> - Credit (6 points)
-                                </div>
-                            </div>
+<section class="hero-section mb-5 position-relative">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="hero-card p-5 rounded-4 shadow-sm">
+                <div class="row align-items-center g-4">
+                    <div class="col-lg-7">
+                        <span class="badge bg-primary-soft text-primary fw-semibold mb-3">Admissions Made Simple</span>
+                        <h1 class="display-5 fw-bold mb-4">
+                            <i class="fas fa-graduation-cap text-primary me-3"></i>
+                            Alfred University Admission Checker
+                        </h1>
+                        <p class="lead text-secondary mb-4">Discover which universities and programs you're eligible for with your WASSCE results. Fast, modern, and built for Ghanaian applicants.</p>
+                        <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                            <i class="fas fa-edit me-2"></i> Start Manual Entry
+                        </a>
+                    </div>
+                    <div class="col-lg-5 text-lg-end">
+                        <div class="hero-badge d-inline-flex align-items-center justify-content-center rounded-circle bg-white shadow-sm" style="width: 120px; height: 120px;">
+                            <i class="fas fa-check-double fa-3x text-primary"></i>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <h5 class="mb-4 text-danger">
-                            <i class="fas fa-times-circle me-2"></i>Failing Grades
-                        </h5>
-                        <div class="row g-2">
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-warning">D7</strong> - Pass (7 points)
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-warning">E8</strong> - Pass (8 points)
-                                </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="p-2 border rounded bg-light">
-                                    <strong class="text-danger">F9</strong> - Fail (9 points)
-                                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card h-100 text-center p-4">
+                <div class="feature-icon mb-4 text-primary">
+                    <i class="fas fa-edit fa-3x"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Manual Grade Entry</h5>
+                <p class="text-secondary">Enter your WASSCE grades manually using our intuitive and fast selection form.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card h-100 text-center p-4">
+                <div class="feature-icon mb-4 text-success">
+                    <i class="fas fa-brain fa-3x"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Smart Matching</h5>
+                <p class="text-secondary">Our smart system matches your grades against all Ghanaian universities and program requirements.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card h-100 text-center p-4">
+                <div class="feature-icon mb-4 text-info">
+                    <i class="fas fa-chart-bar fa-3x"></i>
+                </div>
+                <h5 class="fw-bold mb-3">Instant Results</h5>
+                <p class="text-secondary">Get a clear dashboard showing qualified, borderline, and recommended programs instantly.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="how-it-works-section mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="section-heading text-center mb-5">
+                <span class="badge bg-primary-soft text-primary mb-3">How It Works</span>
+                <h2 class="fw-bold">4 Easy Steps to Find Your Program</h2>
+                <p class="text-secondary mx-auto" style="max-width: 620px;">Follow these simple steps and uncover the best university options based on your WASSCE results.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="step-card text-center p-4 h-100 rounded-4">
+                        <div class="step-badge bg-primary text-white mb-3">1</div>
+                        <h5 class="fw-bold mb-2">Upload Result</h5>
+                        <p class="text-secondary small">Upload your result slip or enter grades manually.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card text-center p-4 h-100 rounded-4">
+                        <div class="step-badge bg-primary text-white mb-3">2</div>
+                        <h5 class="fw-bold mb-2">Verify Grades</h5>
+                        <p class="text-secondary small">Confirm that your grades and electives are correct.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card text-center p-4 h-100 rounded-4">
+                        <div class="step-badge bg-primary text-white mb-3">3</div>
+                        <h5 class="fw-bold mb-2">Get Matches</h5>
+                        <p class="text-secondary small">See all matching programs for your profile.</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="step-card text-center p-4 h-100 rounded-4">
+                        <div class="step-badge bg-primary text-white mb-3">4</div>
+                        <h5 class="fw-bold mb-2">Apply Now</h5>
+                        <p class="text-secondary small">Choose a program and move ahead with your application.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="grading-section mb-5">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="section-heading text-center mb-4">
+                <h2 class="fw-bold">WASSCE Grading System</h2>
+            </div>
+            <div class="card grade-card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h5 class="mb-4 text-success"><i class="fas fa-check-circle me-2"></i>Passing Grades</h5>
+                            <div class="row g-2">
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">A1</strong> - Excellent</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">B2</strong> - Very Good</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">B3</strong> - Good</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">C4</strong> - Credit</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">C5</strong> - Credit</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-success">C6</strong> - Credit</div></div>
                             </div>
                         </div>
-                        <div class="alert alert-warning mt-3 border-0">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <small><strong>Note:</strong> D7, E8, F9 are not counted as passing grades for university admission.</small>
+                        <div class="col-md-6">
+                            <h5 class="mb-4 text-danger"><i class="fas fa-times-circle me-2"></i>Failing Grades</h5>
+                            <div class="row g-2">
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-warning">D7</strong> - Pass</div></div>
+                                <div class="col-6"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-warning">E8</strong> - Pass</div></div>
+                                <div class="col-12"><div class="grade-pill bg-light border rounded-pill p-3"><strong class="text-danger">F9</strong> - Fail</div></div>
+                            </div>
+                            <div class="alert alert-warning mt-4 border-0 rounded-4">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <small><strong>Note:</strong> D7, E8, F9 are not counted as passing grades for university admission.</small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<!-- CTA Section -->
-<div class="row">
-    <div class="col-lg-10 offset-lg-1">
-        <div class="bg-primary text-white p-5 rounded shadow text-center">
-            <h2 class="fw-bold mb-3">Ready to Check Your Eligibility?</h2>
-            <p class="fs-5 mb-4 opacity-75">Enter your WASSCE results manually and discover which programs you qualify for</p>
-            <a href="{{ url_for('main.manual_entry') }}" class="btn btn-light btn-lg px-4 py-3 shadow">
-                <i class="fas fa-arrow-right me-2"></i> Start Now
-            </a>
+<section class="cta-section">
+    <div class="row">
+        <div class="col-lg-10 mx-auto">
+            <div class="cta-card p-5 rounded-4 shadow-sm text-center">
+                <h2 class="fw-bold mb-3">Ready to Check Your Eligibility?</h2>
+                <p class="fs-5 mb-4 text-secondary">Enter your WASSCE results manually and discover which programs you qualify for.</p>
+                <a href="{{ url_for('main.manual_entry') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                    <i class="fas fa-arrow-right me-2"></i> Start Now
+                </a>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <section class="contact-section mb-5">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="section-heading text-center mb-5">
+                    <span class="badge bg-primary-soft text-primary mb-3">Get In Touch</span>
+                    <h2 class="fw-bold">Contact Us</h2>
+                    <p class="text-secondary mx-auto" style="max-width: 600px;">Have questions about university admissions or need help with the eligibility checker? We're here to help!</p>
+                </div>
+                <div class="row g-4 justify-content-center">
+                    <div class="col-md-4">
+                        <div class="contact-card text-center p-4 h-100 rounded-4">
+                            <div class="contact-icon mb-3 text-primary">
+                                <i class="fas fa-envelope fa-2x"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Email Support</h5>
+                            <p class="text-secondary mb-2">Get in touch with our support team</p>
+                            <a href="mailto:akweteyalfred3@gmail.com" class="text-decoration-none fw-semibold text-primary">
+                                akweteyalfred3@gmail.com
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-card text-center p-4 h-100 rounded-4">
+                            <div class="contact-icon mb-3 text-success">
+                                <i class="fas fa-phone fa-2x"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Phone Support</h5>
+                            <p class="text-secondary mb-2">Call us for immediate assistance</p>
+                            <a href="tel:+233532340875" class="text-decoration-none fw-semibold text-success">
+                                +233 532 340 875
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="contact-card text-center p-4 h-100 rounded-4">
+                            <div class="contact-icon mb-3 text-info">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">Support Hours</h5>
+                            <p class="text-secondary mb-2">When you can reach us</p>
+                            <span class="fw-semibold text-info">Mon - Fri, 9:00 AM - 5:00 PM</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endblock %}
+

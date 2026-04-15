@@ -1,0 +1,500 @@
+{% extends "base.html" %}
+
+{% block title %}Cutoff Point Management - Admin{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-10 offset-lg-1">
+        <div class="mb-5">
+            <h1 class="display-6"><i class="fas fa-sliders-h text-primary"></i> Cutoff Point Management</h1>
+            <p class="text-muted">Manage and update annual university program cutoff points in real-time.</p>
+        </div>
+
+        <!-- Year Selection -->
+        <div class="mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-light border-0 rounded-top-4">
+                    <h5 class="mb-0"><i class="fas fa-calendar text-primary"></i> Academic Year</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Select Year</label>
+                            <select id="academicYear" class="form-select form-select-lg"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Filter by University</label>
+                            <select id="universityFilter" class="form-select form-select-lg">
+                                <option value="">All Universities</option>
+                                <option value="traditional">Traditional Universities</option>
+                                <option value="technical">Technical Universities</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bulk Update Section -->
+        <div class="mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-light border-0 rounded-top-4">
+                    <h5 class="mb-0"><i class="fas fa-upload text-success"></i> Bulk Update Tools</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <button class="btn btn-success btn-lg w-100" id="bulkUploadBtn">
+                                <i class="fas fa-file-upload me-2"></i> Upload CSV
+                            </button>
+                            <small class="text-muted d-block mt-2">Format: program_id,new_aggregate,reason</small>
+                        </div>
+                        <div class="col-md-6">
+                            <button class="btn btn-info btn-lg w-100" id="exportBtn">
+                                <i class="fas fa-download me-2"></i> Export Current
+                            </button>
+                            <small class="text-muted d-block mt-2">Download current cutoff data as CSV</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search & Filter -->
+        <div class="mb-4">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-white border-end-0">
+                    <i class="fas fa-search text-primary"></i>
+                </span>
+                <input type="text" class="form-control border-start-0" id="searchPrograms" 
+                       placeholder="Search programs, universities..." autocomplete="off">
+                <button class="btn btn-outline-secondary" type="button" id="clearSearch">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Updates Feed -->
+        <div class="mb-4">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-light border-0">
+                    <h5 class="mb-0"><i class="fas fa-history text-primary"></i> Recent Updates</h5>
+                </div>
+                <div id="updatesFeed" class="card-body">
+                    <div class="text-center text-muted">
+                        <i class="fas fa-spinner fa-spin fa-2x mb-3"></i>
+                        <p>Loading recent updates...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Programs List with Edit Capability -->
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-light border-0 rounded-top-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="fas fa-graduation-cap text-primary"></i> Programs</h5>
+                    <span class="badge bg-primary" id="programCount">0</span>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="programsTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>University</th>
+                            <th>Program Name</th>
+                            <th class="text-center">Current Cutoff</th>
+                            <th class="text-center">New Cutoff</th>
+                            <th>Reason</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="programsTableBody">
+                        <tr><td colspan="6" class="text-center text-muted py-4"><i class="fas fa-spinner fa-spin"></i> Loading programs...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="row mt-5 g-3" id="statsContainer" style="display: none;">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-light rounded-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-graduation-cap fa-2x text-primary mb-2"></i>
+                        <h3 id="totalPrograms" class="fw-bold">0</h3>
+                        <p class="text-muted mb-0">Total Programs</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-light rounded-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-sync text-success fa-2x mb-2"></i>
+                        <h3 id="updatedToday" class="fw-bold">0</h3>
+                        <p class="text-muted mb-0">Updated Today</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm bg-light rounded-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle text-warning fa-2x mb-2"></i>
+                        <h3 id="official" class="fw-bold">0</h3>
+                        <p class="text-muted mb-0">Official Cutoffs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="editCutoffModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header border-0 bg-light rounded-top-4">
+                <h5 class="modal-title fw-bold">Update Cutoff Point</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Program</label>
+                    <input type="text" class="form-control" id="editProgramName" disabled>
+                    <input type="hidden" id="editProgramId">
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Current Cutoff</label>
+                        <input type="text" class="form-control" id="editCurrentCutoff" disabled>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">New Cutoff</label>
+                        <input type="number" class="form-control" id="editNewCutoff" min="12" max="36">
+                    </div>
+                </div>
+                <div class="mb-3 mt-3">
+                    <label class="form-label fw-bold">Reason for Change</label>
+                    <textarea class="form-control" id="editReason" rows="3" placeholder="e.g., Increased demand, Market adjustment"></textarea>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="editOfficial">
+                    <label class="form-check-label" for="editOfficial">
+                        Mark as Official
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="saveUpdateBtn"><i class="fas fa-save me-2"></i>Save Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const academicYear = document.getElementById('academicYear');
+    const universityFilter = document.getElementById('universityFilter');
+    const searchInput = document.getElementById('searchPrograms');
+    const clearSearchBtn = document.getElementById('clearSearch');
+    const programsTableBody = document.getElementById('programsTableBody');
+    const programCount = document.getElementById('programCount');
+    const editCutoffModal = new bootstrap.Modal(document.getElementById('editCutoffModal'));
+    
+    let allPrograms = [];
+    let currentEditingProgram = null;
+    
+    function populateYearOptions() {
+        const currentYear = new Date().getFullYear();
+        academicYear.innerHTML = '';
+        for (let year = currentYear; year >= currentYear - 3; year--) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year === currentYear ? `${year} (Current)` : `${year}`;
+            academicYear.appendChild(option);
+        }
+    }
+
+    populateYearOptions();
+
+    // Load programs on page load
+    loadPrograms();
+    loadRecentUpdates();
+    
+    // Event listeners
+    academicYear.addEventListener('change', loadPrograms);
+    universityFilter.addEventListener('change', loadPrograms);
+    searchInput.addEventListener('input', filterPrograms);
+    clearSearchBtn.addEventListener('click', function() {
+        searchInput.value = '';
+        filterPrograms();
+    });
+    
+    document.getElementById('saveUpdateBtn').addEventListener('click', saveUpdate);
+    document.getElementById('exportBtn').addEventListener('click', exportData);
+    document.getElementById('bulkUploadBtn').addEventListener('click', function() {
+        alert('CSV upload feature will open a file picker.');
+    });
+    
+    // Load programs
+    function loadPrograms() {
+        const year = academicYear.value;
+        const filter = universityFilter.value;
+        
+        fetch(`/api/cutoff-points?year=${year}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success) {
+                    allPrograms = data.programs;
+                    
+                    // Apply university filter
+                    let filtered = allPrograms;
+                    if (filter === 'traditional') {
+                        filtered = filtered.filter(p => p.university_type === 'Traditional');
+                    } else if (filter === 'technical') {
+                        filtered = filtered.filter(p => p.university_type === 'Technical');
+                    }
+                    
+                    renderPrograms(filtered);
+                    programCount.textContent = filtered.length;
+                    document.getElementById('statsContainer').style.display = 'grid';
+                }
+            })
+            .catch(err => console.error('Error loading programs:', err));
+    }
+    
+    // Render programs table
+    function renderPrograms(programs) {
+        if (programs.length === 0) {
+            programsTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No programs found</td></tr>';
+            return;
+        }
+        
+        programsTableBody.innerHTML = programs.map(p => `
+            <tr>
+                <td><strong>${p.university_name}</strong></td>
+                <td>${p.name}</td>
+                <td class="text-center">
+                    <span class="badge bg-info">${p.maximum_aggregate}</span>
+                </td>
+                <td class="text-center">
+                    <input type="number" class="form-control form-control-sm" style="width: 80px; margin: 0 auto;" 
+                           data-program-id="${p.id}" min="12" max="36" placeholder="New">
+                </td>
+                <td>
+                    <textarea class="form-control form-control-sm" style="font-size: 0.85rem;" rows="1" 
+                              data-reason-id="${p.id}" placeholder="Reason"></textarea>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-primary" onclick="openEditModal('${p.id}', '${p.name}', ${p.maximum_aggregate})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    // Filter programs
+    function filterPrograms() {
+        const query = searchInput.value.toLowerCase();
+        const filtered = allPrograms.filter(p => 
+            p.name.toLowerCase().includes(query) || 
+            p.university_name.toLowerCase().includes(query)
+        );
+        renderPrograms(filtered);
+    }
+    
+    // Open edit modal
+    window.openEditModal = function(programId, programName, currentCutoff) {
+        currentEditingProgram = programId;
+        document.getElementById('editProgramId').value = programId;
+        document.getElementById('editProgramName').value = programName;
+        document.getElementById('editCurrentCutoff').value = currentCutoff;
+        document.getElementById('editNewCutoff').value = '';
+        document.getElementById('editReason').value = '';
+        document.getElementById('editOfficial').checked = false;
+        editCutoffModal.show();
+    };
+    
+    // Save update
+    function saveUpdate() {
+        const programId = document.getElementById('editProgramId').value;
+        const newCutoff = parseInt(document.getElementById('editNewCutoff').value);
+        const reason = document.getElementById('editReason').value;
+        const isOfficial = document.getElementById('editOfficial').checked;
+        const year = academicYear.value;
+        
+        if (!newCutoff || newCutoff < 12 || newCutoff > 36) {
+            alert('Invalid cutoff point (must be 12-36)');
+            return;
+        }
+        
+        fetch(`/api/cutoff-points/${programId}/update`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                maximum_aggregate: newCutoff,
+                academic_year: year,
+                change_reason: reason,
+                is_official: isOfficial
+            })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                alert('Cutoff point updated successfully!');
+                editCutoffModal.hide();
+                loadPrograms();
+                loadRecentUpdates();
+            } else {
+                alert('Error: ' + data.error);
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('Failed to update cutoff point');
+        });
+    }
+    
+    // Load recent updates
+    function loadRecentUpdates() {
+        const year = academicYear.value;
+        const feed = document.getElementById('updatesFeed');
+        
+        fetch(`/api/cutoff-points?year=${year}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success && data.programs) {
+                    const recentUpdates = data.programs
+                        .filter(p => p.last_updated)
+                        .sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated))
+                        .slice(0, 5);
+                    
+                    if (recentUpdates.length === 0) {
+                        feed.innerHTML = '<p class="text-muted text-center my-4">No recent updates</p>';
+                        return;
+                    }
+                    
+                    feed.innerHTML = recentUpdates.map(p => `
+                        <div class="border-bottom pb-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="fw-bold mb-1">${p.name}</h6>
+                                    <p class="text-muted small mb-0">${p.university_name}</p>
+                                </div>
+                                <span class="badge bg-info">${p.maximum_aggregate}</span>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                Updated: ${new Date(p.last_updated).toLocaleDateString()}
+                            </small>
+                        </div>
+                    `).join('');
+                }
+            })
+            .catch(err => console.error('Error loading updates:', err));
+    }
+    
+    // Export data
+    function exportData() {
+        const year = academicYear.value;
+        const programs = allPrograms.filter(p => !universityFilter.value || 
+            (universityFilter.value === 'traditional' ? p.university_type === 'Traditional' : p.university_type === 'Technical'));
+        
+        const csv = [
+            ['University', 'Program', 'Cutoff', 'Category', 'Year'],
+            ...programs.map(p => [p.university_name, p.name, p.maximum_aggregate, p.category, year])
+        ];
+        
+        const csvContent = csv.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+        const blob = new Blob([csvContent], {type: 'text/csv'});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `cutoffs_${year}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+    
+    // Auto-refresh updates every 30 seconds
+    setInterval(loadRecentUpdates, 30000);
+    
+    // Real-time cutoff updates - poll every 10 seconds
+    let lastUpdateTimestamp = null;
+    setInterval(() => {
+        const year = academicYear.value;
+        fetch(`/api/cutoff-points?year=${year}&timestamp=${lastUpdateTimestamp || ''}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data.success && data.programs) {
+                    // Check if there are new updates
+                    const hasUpdates = data.programs.some(p => {
+                        if (!lastUpdateTimestamp) return false;
+                        return new Date(p.last_updated) > new Date(lastUpdateTimestamp);
+                    });
+                    
+                    if (hasUpdates || !lastUpdateTimestamp) {
+                        // Update timestamp
+                        const latestUpdate = data.programs
+                            .filter(p => p.last_updated)
+                            .sort((a, b) => new Date(b.last_updated) - new Date(a.last_updated))[0];
+                        
+                        if (latestUpdate) {
+                            lastUpdateTimestamp = latestUpdate.last_updated;
+                        }
+                        
+                        // Refresh programs if there are changes
+                        allPrograms = data.programs;
+                        const filter = universityFilter.value;
+                        let filtered = allPrograms;
+                        if (filter === 'traditional') {
+                            filtered = filtered.filter(p => p.university_type === 'Traditional');
+                        } else if (filter === 'technical') {
+                            filtered = filtered.filter(p => p.university_type === 'Technical');
+                        }
+                        
+                        // Apply search filter
+                        const query = searchInput.value.toLowerCase();
+                        if (query) {
+                            filtered = filtered.filter(p => 
+                                p.name.toLowerCase().includes(query) || 
+                                p.university_name.toLowerCase().includes(query)
+                            );
+                        }
+                        
+                        renderPrograms(filtered);
+                        
+                        // Show update notification
+                        if (hasUpdates) {
+                            showUpdateNotification();
+                        }
+                    }
+                }
+            })
+            .catch(err => console.error('Error polling for updates:', err));
+    }, 10000); // Poll every 10 seconds
+    
+    // Show update notification
+    function showUpdateNotification() {
+        const notification = document.createElement('div');
+        notification.className = 'alert alert-success alert-dismissible fade show position-fixed';
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            <i class="fas fa-sync-alt"></i> Cutoff points updated automatically
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(notification);
+        
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}

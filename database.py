@@ -59,6 +59,7 @@ def load_universities_data():
                     required_core_subjects=prog_data.get('required_core_subjects', []),
                     required_electives=prog_data.get('required_electives'),
                     course_categories=prog_data.get('course_categories'),
+                    academic_year=prog_data.get('academic_year', 2026),
                     popularity_level=prog_data.get('popularity_level', 'medium'),
                     value_level=prog_data.get('value_level', 'medium'),
                     is_desired_program=prog_data.get('is_desired_program', False)

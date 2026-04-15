@@ -54,6 +54,10 @@ A professional full-stack web application designed for students and administrato
 └── run.py           # Production Server Entry
 ```
 
+> Note: University programs and cutoff points are loaded from `data/universities_data.json`. This dataset is the app's source of truth, but should be updated manually from official university admissions websites for the most accurate results.
+> 
+> Official current cutoff values were partially verified against the University of Ghana admissions page. The dataset still needs full validation for other Ghanaian universities and programs.
+
 ## 🔒 Firebase Configuration
 
 This project is pre-integrated with Firebase. Replace the config in `templates/base.html` with your own project credentials to enable authentication:

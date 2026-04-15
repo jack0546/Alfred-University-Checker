@@ -69,11 +69,14 @@ class Config:
     
     # Common electives
     ELECTIVES = [
-        'Additional Mathematics', 'Physics', 'Chemistry', 'Biology',
-        'Economics', 'Accounting', 'Business Management', 'Civic Education',
-        'History', 'Geography', 'Literature in English', 'French',
-        'Clothing and Textiles', 'Food and Nutrition', 'Visual Arts',
-        'Music', 'Information and Communication Technology', 'General Knowledge in ICT'
+        'Additional Mathematics', 'Elective Mathematics', 'Physics', 'Chemistry', 'Biology',
+        'Agricultural Science', 'Economics', 'Accounting', 'Business Management', 'Costing',
+        'Civic Education', 'Geography', 'History', 'Literature in English', 'French', 'Arabic',
+        'Music', 'Visual Arts', 'Information and Communication Technology', 'General Knowledge in ICT',
+        'General Knowledge in Art', 'Design and Technology', 'Technical Drawing',
+        'Building Construction', 'Auto Mechanics', 'Metal Work', 'Woodwork',
+        'Electrical Engineering Technology', 'Home Management', 'Food and Nutrition',
+        'Clothing and Textiles', 'Physical Education and Sports'
     ]
 
 class DevelopmentConfig(Config):

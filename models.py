@@ -135,10 +135,16 @@ class Program(db.Model):
     minimum_credit_passes = db.Column(db.Integer, default=3)  # Typically 3 credits in core subjects
     course_categories = db.Column(db.JSON, nullable=True)  # Allowed course categories
     
+    # Academic year tracking
+    academic_year = db.Column(db.Integer, default=lambda: datetime.utcnow().year)  # Year of cutoff validity
+    
     # Program popularity and value categorization
     popularity_level = db.Column(db.String(20), default='medium')  # 'high', 'medium', 'low' (how popular)
     value_level = db.Column(db.String(20), default='medium')  # 'high', 'medium', 'low' (how valuable/competitive)
     is_desired_program = db.Column(db.Boolean, default=False)  # Flag for highly desired programs
+    
+    # Metadata
+    last_updated = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     def to_dict(self):
         return {
@@ -152,7 +158,47 @@ class Program(db.Model):
             'minimum_aggregate': self.minimum_aggregate,
             'required_core_subjects': self.required_core_subjects,
             'required_electives': self.required_electives,
-            'minimum_credit_passes': self.minimum_credit_passes
+            'minimum_credit_passes': self.minimum_credit_passes,
+            'academic_year': self.academic_year,
+            'last_updated': self.last_updated.isoformat()
+        }
+
+class CutoffPoint(db.Model):
+    """Track cutoff point changes per program and academic year"""
+    __tablename__ = 'cutoff_points'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    program_id = db.Column(db.Integer, db.ForeignKey('programs.id'), nullable=False)
+    academic_year = db.Column(db.Integer, nullable=False)  # e.g., 2026
+    
+    # Cutoff data
+    maximum_aggregate = db.Column(db.Integer, nullable=False)
+    minimum_aggregate = db.Column(db.Integer, nullable=True)
+    
+    # Metadata
+    updated_by = db.Column(db.String(255), nullable=True)  # Admin who updated
+    update_date = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    notes = db.Column(db.Text, nullable=True)  # Reason for change
+    is_official = db.Column(db.Boolean, default=False)  # Official vs provisional
+    
+    # For audit trail
+    previous_maximum_aggregate = db.Column(db.Integer, nullable=True)
+    change_reason = db.Column(db.String(500), nullable=True)
+    
+    program = db.relationship('Program', backref='cutoff_history')
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'program_id': self.program_id,
+            'academic_year': self.academic_year,
+            'maximum_aggregate': self.maximum_aggregate,
+            'minimum_aggregate': self.minimum_aggregate,
+            'previous_maximum_aggregate': self.previous_maximum_aggregate,
+            'change_reason': self.change_reason,
+            'updated_by': self.updated_by,
+            'update_date': self.update_date.isoformat(),
+            'is_official': self.is_official
         }
 
 class AdmissionResult(db.Model):
